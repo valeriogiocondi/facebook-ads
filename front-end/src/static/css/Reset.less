@@ -1,0 +1,112 @@
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
+
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+/* 
+ *  @variables COLORS
+ */
+
+/*
+ *  COLORS
+ */
+
+ @color1: #FFFFFF;
+ @color2: #484848;
+ @color3: #BBBBBB;
+ @color4: red;
+ @color5: #888888;
+ @color6: #CCCCCC;
+ 
+ @background1: #484848;
+ @background2: #FFFFFF;
+ 
+ @label1: #CCCCCC;
+
+ @link1: #0085FB;
+
+ @textNotAvailableColor: #CCC;
+
+
+ /* 
+  * TEXT
+  * 
+  */
+
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6,
+p 
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+.text-not-available {
+    color: @textNotAvailableColor;
+}
+
+.label {
+    color: @label1;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.link {
+    color: @link1;
+    font-weight: bold;
+    text-decoration: underline !important;
+}
+
+
+ /*
+  *    TRANSITION
+  */
+
+.transition-03 {
+
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+}
+
+/*
+ *  LIST
+ */
+
+ul.list {
+    padding: 0;
+    list-style: none;
+}
+
+.clearfix {
+    clear: both;
+}
+
+
+.input-text {
+    padding: 0px 10px;
+    border-bottom: solid 1px #CCC;
+    text-align: left;
+/* 
+	transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	-webkit-transition: all 0.3s linear; */
+}
+
+.input-text input {
+    width: calc(100% - 25px);
+    padding: 10px;
+    margin-left: 5px;
+    border: none;
+    text-align: left;
+}
+

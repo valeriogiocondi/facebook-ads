@@ -1,0 +1,104 @@
+@import "../../../static/style/Reset.less";
+
+.container {
+    
+    & > header {
+        padding: 10px 0px;
+    }
+
+    & > section {
+        padding: 10px 0px;
+    }
+}
+
+#home {
+    height: calc(100%);
+    background-color: @background2;
+
+    #ads-list {
+
+        ul.list {
+
+            li {
+                padding: 5px 0px;
+                box-sizing: border-box;
+                margin-bottom: 5px;;
+                background-color: @background1;
+                border-radius: 4px;
+                cursor: pointer;
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                -khtml-border-radius: 4px;
+                overflow: hidden;
+                transition: all 0.3s linear;
+                -moz-transition: all 0.3s linear;
+                -o-transition: all 0.3s linear;
+                -webkit-transition: all 0.3s linear;
+    
+                &:hover {
+                    margin: 20px 0px;
+                    background-color: @background2;
+    
+                    .description {
+                        color: @color1;
+                    }
+                    .title {
+                        color: @color1;
+                    }
+                }
+    
+                a {
+                    padding: 0px 15px;
+                    box-sizing: border-box;
+    
+                    .profile-picture {
+                        width: 30px !important;
+                        height: 30px !important;
+                        margin: 3px 10px 0px 10px;
+                        background-size: cover;
+                        background-color: blue;
+                        border-radius: 50% !important;
+                        -webkit-border-radius: 50% !important;
+                        -moz-border-radius: 50% !important;
+                        -khtml-border-radius: 50% !important;
+                        overflow: hidden;
+                    }
+                    .page-name {
+                        font-size: 13px;
+                        font-weight: 700;
+                    }
+                    .date {
+                        color: @color5;
+                        font-size: 12px;
+                    }
+                    .title {
+                        margin-right: 20px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: @color6;
+                            
+                        transition: all 0.4s linear;
+                        -moz-transition: all 0.4s linear;
+                        -o-transition: all 0.4s linear;
+                        -webkit-transition: all 0.4s linear;
+                    }
+                    .description {
+                        min-width: 150px;
+                        margin-top: 0px;
+                        color: @color4;
+                        font-size: 12px;
+                        text-align: center;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                            
+                        transition: all 0.4s linear;
+                        -moz-transition: all 0.4s linear;
+                        -o-transition: all 0.4s linear;
+                        -webkit-transition: all 0.4s linear;
+                    }
+                }
+            }
+        }
+    }
+}

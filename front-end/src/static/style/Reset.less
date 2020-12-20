@@ -1,0 +1,246 @@
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
+
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+/* 
+ *  @variables COLORS
+ */
+
+/*
+ *  COLORS
+
+    DARK THEME
+    
+    @color1: #FFFFFF;
+    @color2: #484848;
+    @color3: #BBBBBB;
+    @color4: red;
+    @color5: #888888;
+    @color6: #CCCCCC;
+    
+    @background1: #484848;
+    @background2: #FFFFFF;
+    
+    @label1: #CCCCCC;
+    
+    @link1: #0085FB;
+    
+    @textNotAvailableColor: #CCC;
+*/
+
+ @color1: #000000;
+ @color2: #484848;
+ @color3: #AAAAAA;
+ @color4: #BBBBBB;
+ @color5: #888888;
+ @color6: #555555;
+ 
+ @background1: #FFFFFF;
+ @background2: #F3F3F3;
+ @background3: #F7F7F7;
+ 
+ @label1: #CCCCCC;
+
+ @link1: #0085FB;
+
+ @textNotAvailableColor: #CCC;
+
+
+ /* 
+  * TEXT
+  * 
+  */
+
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6,
+p 
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+.text-not-available {
+    color: @textNotAvailableColor;
+}
+
+.label {
+    color: @label1;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.link {
+    color: @link1;
+    font-weight: bold;
+    text-decoration: underline !important;
+}
+.no-underline {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+ /* 
+  * BUTTON
+  * 
+  */
+
+  .button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+  }
+
+ /* 
+  * FONT
+  * 
+  */
+
+.font-weight-100 {
+    font-weight: 100;
+}
+.font-weight-200 {
+    font-weight: 200;
+}
+.font-weight-300 {
+    font-weight: 300;
+}
+.font-weight-400 {
+    font-weight: 400;
+}
+.font-weight-500 {
+    font-weight: 500;
+}
+.font-weight-600 {
+    font-weight: 600;
+}
+.font-weight-700 {
+    font-weight: 700;
+}
+.font-weight-800 {
+    font-weight: 800;
+}
+.font-weight-900 {
+    font-weight: 900;
+}
+.no-bold {
+    font-weight: normal;
+}
+
+  /*
+  *    TRANSITION
+  */
+
+.transition-03 {
+
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+}
+
+/*
+ *  TABLE
+ */
+
+.table-content {
+
+    border: solid 1px #000;
+    border-collapse: collapse;
+    
+    thead {
+        
+        th {
+            min-width: 150px;
+            text-align: center;
+            border-right: solid 1px #000;
+        }
+    }
+    tbody {
+        tr {
+            td {
+                min-width: 150px;
+                max-width: 350px;
+                padding: 10px 5px;
+                border: solid 1px #000;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+}
+
+/*
+ *  LIST
+ */
+
+ul.list {
+    padding: 0;
+    list-style: none;
+}
+
+
+/* 
+ *  DIMENSION
+ */
+
+.width-100x {
+    width: 100% !important;
+}
+
+
+
+/* 
+ *  POSITION
+ */
+
+.clearfix {
+    clear: both;
+}
+
+
+/* 
+ *  INPUT
+ */
+
+.input-text {
+    width: 200px;
+    padding: 0px 10px;
+    margin: 0px auto;
+    border-bottom: solid 1px #CCC;
+    text-align: left;
+/* 
+	transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	-webkit-transition: all 0.3s linear; */
+}
+
+.input-text input {
+    width: calc(100% - 25px);
+    padding: 10px;
+    margin-left: 5px;
+    border: none;
+    text-align: left;
+}
+
+input:focus {
+    outline: none !important;
+}
+
+
+.container {
+    min-height: 1000px;
+}

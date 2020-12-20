@@ -1,0 +1,29 @@
+.input-text {
+    padding: 0px 10px;
+    border-bottom: solid 1px #CCC;
+    text-align: left;
+/* 
+	transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	-webkit-transition: all 0.3s linear; */
+}
+
+.input-text input {
+    width: calc(100% - 25px);
+    padding: 10px;
+    margin-left: 5px;
+    border: none;
+    text-align: left;
+}
+
+
+/*
+ *  LIST
+ *
+ */
+
+ ul.list {
+    padding: 0;
+    list-style: none;
+ }
