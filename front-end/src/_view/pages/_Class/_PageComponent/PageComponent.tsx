@@ -2,13 +2,13 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // HOC
-import RelayHOC from '../../hocs/relay';
-import TemplatePageListHOC from '../../hocs/template-page-list';
-import TemplatePageDetailsHOC from '../../hocs/template-page-details';
+import RelayHOC from '../../../hocs/relay';
+import TemplatePageListHOC from '../../../hocs/template-page-list';
+import TemplatePageDetailsHOC from '../../../hocs/template-page-details';
 
 // SERVICES
-import LoginService from '../../../services/LoginService';
-import RestService from '../../../services/RestService';
+import LoginService from '../../../../services/LoginService';
+import RestService from '../../../../services/RestService';
 
 import './PageComponent.less';
 

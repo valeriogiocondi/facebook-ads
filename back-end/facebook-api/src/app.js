@@ -8,13 +8,11 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const database = require('./config/database');
 const RabbitMQ_layer = require('./frameworks/rabbitMQ');
 
 // Constants
-const PORT = process.env.PORT;
 const HOST = process.env.HOST;
+const PORT = process.env.PORT;
 
 // App
 const app = express();
@@ -25,28 +23,10 @@ const gateway = require("./frameworks/gateway");
 (async () => {
 
   app.use(bodyParser.json());
-  app.use(cors());
   
   app.get('/', (req, res) => {
   
     res.send('FB-API microservice works!!');
-  });
-
-  /* 
-   *  init Database
-   */
-  await new Promise(async (resolve, reject) => {
-    
-    try {
-
-      await database.init();
-      resolve();
-      
-    } catch (error) {
-      
-      console.log(error);
-      reject();
-    }
   });
 
   /* 

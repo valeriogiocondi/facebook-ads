@@ -20,6 +20,7 @@ class BatchJobExecutedResponseDTOMapper {
                     byBatch: bo.by_batch,
                     created: bo.date_create,
                 };
+
                 return new BatchJobExecutedResponseDTO(obj);
             };
             
@@ -47,7 +48,6 @@ class BatchJobExecutedResponseDTOMapper {
                 let obj = {
                     id: dto.id,
                     batch_job: dto.batchJob,
-                    page_social: dto.pageSocial,
                     by_batch: dto.byBatch,
                     date_create: dto.created,
                 };

@@ -33,11 +33,11 @@ const gateway = require("./frameworks/gateway");
   /* 
    *  init Database
    */
-  await new Promise(async (resolve, reject) => {
+  new Promise((resolve, reject) => {
     
     try {
 
-      await database.init();
+      database.init();
       resolve();
       
     } catch (error) {

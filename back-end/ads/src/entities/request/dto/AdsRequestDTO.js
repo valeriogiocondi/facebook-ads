@@ -3,25 +3,11 @@ module.exports = class AdsRequestDTO {
     constructor(params) {
         
         // Fields useful in order to save Ads
-        this._id = params._id;
-        this.id = params.id;
-        this.adCreationTime = params.adCreationTime; 
-        this.adCreativeBody = params.adCreativeBody; 
-        this.adCreativeLinkCaption = params.adCreativeLinkCaption; 
-        this.adCreativeLinkDescription = params.adCreativeLinkDescription; 
-        this.adCreativeLinkTitle = params.adCreativeLinkTitle; 
-        this.adDeliveryStartTime = params.adDeliveryStartTime; 
-        this.adSnapshotUrl = params.adSnapshotUrl; 
-        this.currency = params.currency; 
-        this.fundingEntity = params.fundingEntity;
-        this.pageId = params.pageId;
-        this.pageName = params.pageName;
-        this.impressions = params.impressions;
-        this.publisherPlatforms = params.publisherPlatforms;
-        this.demographicDistribution = params.demographicDistribution;
-        this.regionDistribution = params.regionDistribution;
-        this.spend = params.spend;
-        this.batchJobId = params.batchJobId;
-        this.created = params.created;
+        this._id                 = params._id;
+        this.pageId              = params.pageId;
+        this.batchJobId          = params.batchJobId;
+        this.batchJobExecutedId  = params.batchJobExecutedId;
+        this.page                = params.page;
+        this.limit               = params.limit;
     }
 };

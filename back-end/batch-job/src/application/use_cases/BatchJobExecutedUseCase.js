@@ -16,14 +16,9 @@ class BatchJobExecuted {
         return batchJobExecutedPersistence.getById(requestBO);
     }
 
-    async getByJobId(requestBO) {
+    async getByBatchJobId(requestBO) {
 
-        return batchJobExecutedPersistence.getByJobId(requestBO);
-    }
-    
-    async getAdsByJob(requestBO) {
-
-        return batchJobExecutedPersistence.getAdsByJob(requestBO);
+        return batchJobExecutedPersistence.getByBatchJobId(requestBO);
     }
 
     async getAdsByJobExecuted(requestBO) {

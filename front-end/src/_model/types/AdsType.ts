@@ -1,4 +1,4 @@
-type AdsType = {
+export type AdsType = {
     _id:                            string
     id:                             string
     adCreationTime:                 string 
@@ -12,30 +12,28 @@ type AdsType = {
     fundingEntity:                  string
     pageId:                         string
     pageName:                       string
-    impressions:                    AdsImpressions
+    impressions:                    AdsImpressionsType
     publisherPlatforms:             Array<string>
-    demographicDistribution:        Array<AdsDemographicDistribution>
-    regionDistribution:             Array<AdsRegionDistribution>
-    spend:                          AdsSpend
+    demographicDistribution:        Array<AdsDemographicDistributionType>
+    regionDistribution:             Array<AdsRegionDistributionType>
+    spend:                          AdsSpendType
     created:                        string
 };
 
-type AdsImpressions = {
+export type AdsImpressionsType = {
     lowerBound: string
     upperBound: string
 }
-type AdsDemographicDistribution = { 
+export type AdsDemographicDistributionType = { 
     percentage: string 
     age: string 
     gender: string 
 }
-type AdsRegionDistribution = { 
+export type AdsRegionDistributionType = { 
     percentage: string 
     region: string 
 }
-type AdsSpend = {
+export type AdsSpendType = {
     lowerBound: string
     upperBound: string
 }
-
-export default AdsType;

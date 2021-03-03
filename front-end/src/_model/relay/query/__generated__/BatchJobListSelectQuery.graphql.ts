@@ -27,6 +27,7 @@ export type BatchJobListSelectQueryResponse = {
             readonly impressionCondition: number | null;
             readonly searchTerms: string | null;
             readonly time: string | null;
+            readonly numAds: number | null;
             readonly created: string | null;
         } | null>;
     } | null;
@@ -63,6 +64,7 @@ query BatchJobListSelectQuery(
       impressionCondition
       searchTerms
       time
+      numAds
       created
     }
   }
@@ -233,6 +235,13 @@ const node: ConcreteRequest = (function () {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
+                            "name": "numAds",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
                             "name": "created",
                             "storageKey": null
                         }
@@ -264,9 +273,9 @@ const node: ConcreteRequest = (function () {
             "metadata": {},
             "name": "BatchJobListSelectQuery",
             "operationKind": "query",
-            "text": "query BatchJobListSelectQuery(\n  $authToken: String!\n  $limit: Int!\n  $page: Int!\n) {\n  getBatchJobList(authToken: $authToken, limit: $limit, page: $page) {\n    token\n    batchJobList {\n      id\n      pageSocial {\n        id\n        internalId\n        name\n        publisherPlatform {\n          idPublisherPlatform\n          valuePublisherPlatform\n        }\n      }\n      adActiveStatus\n      adReachedCountries\n      adType\n      impressionCondition\n      searchTerms\n      time\n      created\n    }\n  }\n}\n"
+            "text": "query BatchJobListSelectQuery(\n  $authToken: String!\n  $limit: Int!\n  $page: Int!\n) {\n  getBatchJobList(authToken: $authToken, limit: $limit, page: $page) {\n    token\n    batchJobList {\n      id\n      pageSocial {\n        id\n        internalId\n        name\n        publisherPlatform {\n          idPublisherPlatform\n          valuePublisherPlatform\n        }\n      }\n      adActiveStatus\n      adReachedCountries\n      adType\n      impressionCondition\n      searchTerms\n      time\n      numAds\n      created\n    }\n  }\n}\n"
         }
     } as any;
 })();
-(node as any).hash = '79d475a749dd27c5441c563ebdd0afe4';
+(node as any).hash = '3b29e97bb58c64df41979d0c85cd7b79';
 export default node;

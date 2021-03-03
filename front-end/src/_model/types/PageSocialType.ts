@@ -1,3 +1,4 @@
+import { AdsType } from "./AdsType";
 import PublisherPlatformType from "./PublisherPlatformType";
 
 type PageSocialType = {
@@ -5,6 +6,8 @@ type PageSocialType = {
     internalId:         string  
     name:               string    
     publisherPlatform:  PublisherPlatformType
+    numAds:             number
+    adsList:            AdsType[]
 };
 
 

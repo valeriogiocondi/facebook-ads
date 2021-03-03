@@ -34,9 +34,9 @@ class Store {
 
     public subscribe(callback: any): any {
         
-      this.store.subscribe( () => {
+      this.store.subscribe(() => {
               
-        callback();
+        callback(this.store.getState());
 		  });
     }
 

@@ -1,18 +1,6 @@
 /*
  *    PAGE SOCIAL
  *
-nc -v localhost 5672
-telnet localhost 5673
-
-rm -r ./api-gateway/node_modules/;
-rm -r ./auth/node_modules/;
-rm -r ./nodejs-docker-3/node_modules/;
- 
-docker-compose down;
-docker image rmi page-social;
-docker-compose up;
-;
-
  */
 
 'use strict';
@@ -24,8 +12,8 @@ const database = require('./config/database');
 const RabbitMQ_layer = require('./frameworks/rabbitMQ');
 
 // Constants
-const PORT = process.env.PORT;
 const HOST = process.env.HOST;
+const PORT = process.env.PORT;
 
 // App
 const app = express();
@@ -45,16 +33,16 @@ const gateway = require("./frameworks/gateway");
   /* 
    *  init Database
    */
-  await new Promise(async (resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     
     try {
 
-      await database.init();
+      database.init();
       resolve();
       
     } catch (error) {
       
-      console.log(error);
+      console.error(error);
       reject();
     }
   });
@@ -71,11 +59,11 @@ const gateway = require("./frameworks/gateway");
       
     } catch (error) {
       
-      console.log(error);
+      console.error(error);
       reject();
     }
   });
-  
+
   gateway(app);
 
   app.listen(PORT, HOST);

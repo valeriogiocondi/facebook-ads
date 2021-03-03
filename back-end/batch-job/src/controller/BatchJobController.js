@@ -16,28 +16,34 @@ class BatchJobController {
             // Then we get BatchJob DTO earlier, in order to join 'em
             let batchJobResponseDTO = BatchJobResponseDTOMapper.toDTO(resultBO);
 
-            let messageBody = batchJobResponseDTO; 
+            // RabbitMQ - get pageSocial
+            let requestPageSocial = batchJobResponseDTO; 
             if (Array.isArray(batchJobResponseDTO))
-                messageBody = new Set( batchJobResponseDTO.map(item => item.pageSocial) );
+            requestPageSocial = Array.from( new Set( batchJobResponseDTO.map(batch => batch.pageSocial.id) ) );
 
-            let responseMessage = await RabbitMQ_layer.joinWith("page-social.all", { body: { pageIdList: messageBody} } );
-
-            // mapping result
-            if (!Array.isArray(batchJobResponseDTO))
-                batchJobResponseDTO.pageSocial = responseMessage.payload;
-            else {
-                batchJobResponseDTO = batchJobResponseDTO.map((batch) => {
-
-                    batch.pageSocial = responseMessage.payload.filter((pageSocial) => {
-                        
-                        if (batch.pageSocial == pageSocial.id)
-                            return pageSocial;
-                    })[0];
-
-                    return batch;
-                });
-            }
+            let responsePageSocial = await RabbitMQ_layer.joinWith("page-social.all", { body: { pageIdList: requestPageSocial } } );
             
+            // RabbitMQ - get countAds
+            let requestCountAds = batchJobResponseDTO.map(batch => batch.id);
+            let responseCountAds = await RabbitMQ_layer.joinWith("ads.count.by-batch-job-id", { body: { batchJobIdList: requestCountAds } } );
+            
+            // mapping result
+            batchJobResponseDTO = batchJobResponseDTO.map((batch) => {
+
+                batch.pageSocial = responsePageSocial.payload.filter((pageSocial) => {
+                    
+                    if (batch.pageSocial == pageSocial.id)
+                        return pageSocial;
+                })[0];
+
+                batch.numAds = responseCountAds.payload.filter((res) => {
+                    
+                    return (res.batchJobId === batch.id)
+                })[0].count;
+                
+                return batch;
+            });
+        
             return batchJobResponseDTO;
 
         }, (err) => {
@@ -164,10 +170,16 @@ class BatchJobController {
 
             if (batchJobResponseDTO && Object.keys(batchJobResponseDTO).length !== 0) {
 
-                let request = { id: batchJobResponseDTO.pageSocial };
-                let responseMessage = await RabbitMQ_layer.joinWith("page-social.id", { body: request } );
+                // RabbitMQ - get pageSocial
+                let requestPageSocial = { id: batchJobResponseDTO.pageSocial };
+                let responsePageSocial = await RabbitMQ_layer.joinWith("page-social.id", { body: requestPageSocial } );
 
-                batchJobResponseDTO.pageSocial = responseMessage.payload;
+                // RabbitMQ - get countAds
+                // const requestCountAds = { id: batchJobResponseDTO.id };
+                // const responseCountAds = await RabbitMQ_layer.joinWith("ads.count.by-batch-job-id", { body: requestCountAds } );
+
+                // batchJobResponseDTO.numAds = responseCountAds.payload.count;
+                batchJobResponseDTO.pageSocial = responsePageSocial.payload;
                 return batchJobResponseDTO;
             }
 
@@ -177,6 +189,18 @@ class BatchJobController {
             
             throw err;
         });
+    }
+
+    async getAdsByJobId(requestDTO) {        
+    
+        const requestAds = { 
+            batchJobId: requestDTO.id,
+            limit: requestDTO.limit,
+            page: requestDTO.page,
+        };
+        return (
+            await RabbitMQ_layer.joinWith("ads.by-batch-job-id", { body: requestAds } )
+        ).payload;
     }
     
     async insert(requestDTO) {

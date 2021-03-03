@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+      
+  # api-gateway:
+  #   build:
+  #     context: ./api-gateway
+  #     dockerfile: Dockerfile
+  #   image: api-gateway
+  #   container_name: api-gateway
+  #   restart: unless-stopped
+  #   ports: 
+  #     - "8081:8081"
+  #   depends_on:
+  #     - rabbitmq
+  #   volumes:
+  #     - .:/home/node/app
+  #     - ./api-gateway/node_modules:/home/node/app/node_modules
+       
+  auth-mysql:
+    image: mysql:latest
+    ports: 
+      - "3307:3306"
+    container_name: auth-mysql
+    volumes: 
+      - ./_mysql/auth:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ciao
+      MYSQL_USER: valerio
+      MYSQL_PASSWORD: ciao
+      MYSQL_DATABASE: fbads_auth
+
+
+  ads:
+    build:
+      context: ./ads
+      dockerfile: Dockerfile
+    image: ads
+    container_name: ads
+    restart: unless-stopped
+    ports: 
+      - "8083:8083"
+    depends_on:
+      - rabbitmq
+      - ads-mongo
+    volumes:
+      - .:/home/node/app
+      - ./ads/node_modules:/home/node/app/node_modules
+
+  ads-mongo:
+    image: mongo
+    container_name: ads-mongo
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - ./_mongo/ads:/data/db
+
+
+  page-social:
+    build:
+      context: ./page-social
+      dockerfile: Dockerfile
+    image: page-social
+    container_name: page-social
+    restart: unless-stopped
+    ports: 
+      - "8084:8084"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/home/node/app
+      - ./page-social/node_modules:/home/node/app/node_modules
+
+  page-social-mysql:
+    image: mysql:latest
+    ports: 
+      - "3308:3306"
+    container_name: page-social-mysql
+    volumes: 
+      - ./_mysql/page-social:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ciao
+      MYSQL_USER: valerio
+      MYSQL_PASSWORD: ciao
+      MYSQL_DATABASE: fbads_page_social
+
+
+  batch-job:
+    build:
+      context: ./batch-job
+      dockerfile: Dockerfile
+    image: batch-job
+    container_name: batch-job
+    restart: unless-stopped
+    ports: 
+      - "8085:8085"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/home/node/app
+      - ./batch-job/node_modules:/home/node/app/node_modules
+  
+  batch-job-mysql:
+    image: mysql:latest
+    ports: 
+      - "3309:3306"
+    container_name: batch-job-mysql
+    volumes: 
+      - ./_mysql/batch-job:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ciao
+      MYSQL_USER: valerio
+      MYSQL_PASSWORD: ciao
+      MYSQL_DATABASE: fbads_batch_job
+
+
+  facebook-api:
+    build:
+      context: ./facebook-api
+      dockerfile: Dockerfile
+    image: facebook-api
+    container_name: facebook-api
+    restart: unless-stopped
+    ports: 
+      - "8086:8086"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/home/node/app
+      - ./facebook-api/node_modules:/home/node/app/node_modules
+  
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitMQ
+    ports: 
+      - "5672:5672"
+      - "15672:15672"

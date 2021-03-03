@@ -77,7 +77,7 @@ module.exports = () => {
             async exportCsvAdsByBatchJobId(parent, args, context, info) {
 
                 console.log("GraphQL - Ads By Batch");
-                let response = await outcomingREST.batchJob.getAdsByBatch(args);
+                let response = await outcomingREST.batchJob.getCsvAdsByBatch(args);
                 // return response;
                 return {'token': args.authToken, 'code': response.code, 'payload': response.payload };
 
@@ -127,17 +127,29 @@ module.exports = () => {
             async getBatchJobById(parent, args, context, info) {
 
                 console.log("GraphQL - Batch Job By ID");
-
-                let response = await outcomingREST.batchJob.getById(args.params);
-                return {'token': args.authToken, 'batchJob': response};
+                
+                return {
+                    'token': args.authToken, 
+                    'batchJob': await outcomingREST.batchJob.getById(args), 
+                    'adsList': await outcomingREST.batchJob.getAdsByBatchJobId(args),
+                };
             },
             async getBatchJobExecutedList(parent, args, context, info) {
                 
                 console.log("GraphQL - Batch Job Executed List");
 
                 let response = await outcomingREST.batchJobExecuted.getAll(args);
-                console.log( {'token': args.authToken, 'batchJobExecutedList': response});
                 return {'token': args.authToken, 'batchJobExecutedList': response};
+            },
+            async getBatchJobExecutedById(parent, args, context, info) {
+
+                console.log("GraphQL - Batch Job Executed By ID");
+
+                return {
+                    'token': args.authToken, 
+                    'batchJobExecuted': await outcomingREST.batchJobExecuted.getById(args), 
+                    'adsList': await outcomingREST.batchJobExecuted.getAdsByJobExecutedId(args),
+                };
             },
             
             /* 
@@ -151,18 +163,10 @@ module.exports = () => {
             },
             async getPageSocial(parent, args, context, info) {
 
-                console.log("GraphQL - Page Social");
-                let response = await outcomingREST.pageSocial.getById(args);
-                console.log(response);
-                return {'token': args.authToken, 'pageSocial': response};
-            },
-            async getAdsBySocialPageId(parent, args, context, info) {
-
                 console.log("GraphQL - Ads by Page Social IS");
-                let response1 = await outcomingREST.pageSocial.getById(args);
-                let response2 = await outcomingREST.pageSocial.getAdsBySocialPageId(args);
-                console.log(response2);
-                return {'token': args.authToken, 'pageSocial': response1, 'ads': response2};
+                let pageSocial = await outcomingREST.pageSocial.getById(args);
+                let adsList = await outcomingREST.pageSocial.getAdsBySocialPageId(args);
+                return {'token': args.authToken, 'pageSocial': pageSocial, 'adsList': adsList};
             },
         },
 

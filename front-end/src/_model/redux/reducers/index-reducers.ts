@@ -1,13 +1,9 @@
 import { combineReducers } from 'redux'
-import mapLayersReducers from './map-layers-reducers'
-import changeLegendLayerReducers from './change-legend-layer-reducers'
-import projectionsReducers from './projections-reducers'
+import themeReducer from './theme-reducer'
 
 const reducers = combineReducers({
 
-  mapLayers: mapLayersReducers,
-  changeLegendLayer: changeLegendLayerReducers,
-  projections: projectionsReducers,
+  themeReducer: themeReducer,
 });
 
 export default reducers;

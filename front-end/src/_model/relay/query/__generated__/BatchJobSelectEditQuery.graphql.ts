@@ -2,22 +2,9 @@
 /* eslint-disable */
 
 import { ConcreteRequest } from "relay-runtime";
-export type BatchJobInput = {
-    id: string;
-    pageId?: number | null;
-    pageInternalId?: string | null;
-    publisherPlatformId?: number | null;
-    adActiveStatus?: number | null;
-    adReachedCountries?: number | null;
-    adType?: number | null;
-    impressionCondition?: number | null;
-    searchTerms?: string | null;
-    time?: string | null;
-    created?: string | null;
-};
 export type BatchJobSelectEditQueryVariables = {
     authToken: string;
-    params: BatchJobInput;
+    id: string;
 };
 export type BatchJobSelectEditQueryResponse = {
     readonly getBatchJobById: {
@@ -41,6 +28,24 @@ export type BatchJobSelectEditQueryResponse = {
             readonly time: string | null;
             readonly created: string | null;
         };
+        readonly adsList: ReadonlyArray<{
+            readonly _id: string | null;
+            readonly id: string | null;
+            readonly adCreationTime: string | null;
+            readonly adCreativeBody: string | null;
+            readonly adCreativeLinkCaption: string | null;
+            readonly adCreativeLinkDescription: string | null;
+            readonly adCreativeLinkTitle: string | null;
+            readonly adDeliveryStartTime: string | null;
+            readonly adSnapshotUrl: string | null;
+            readonly currency: string | null;
+            readonly publisherPlatforms: ReadonlyArray<string | null> | null;
+            readonly spend: {
+                readonly lowerBound: string | null;
+                readonly upperBound: string | null;
+            } | null;
+            readonly created: string | null;
+        } | null> | null;
     } | null;
     readonly getActiveStatusList: {
         readonly token: string;
@@ -88,9 +93,9 @@ export type BatchJobSelectEditQuery = {
 /*
 query BatchJobSelectEditQuery(
   $authToken: String!
-  $params: BatchJobInput!
+  $id: ID!
 ) {
-  getBatchJobById(authToken: $authToken, params: $params) {
+  getBatchJobById(authToken: $authToken, id: $id) {
     token
     batchJob {
       id
@@ -109,6 +114,24 @@ query BatchJobSelectEditQuery(
       impressionCondition
       searchTerms
       time
+      created
+    }
+    adsList {
+      _id
+      id
+      adCreationTime
+      adCreativeBody
+      adCreativeLinkCaption
+      adCreativeLinkDescription
+      adCreativeLinkTitle
+      adDeliveryStartTime
+      adSnapshotUrl
+      currency
+      publisherPlatforms
+      spend {
+        lowerBound
+        upperBound
+      }
       created
     }
   }
@@ -161,8 +184,8 @@ const node: ConcreteRequest = (function () {
         ({
             "defaultValue": null,
             "kind": "LocalArgument",
-            "name": "params",
-            "type": "BatchJobInput!"
+            "name": "id",
+            "type": "ID!"
         } as any)
     ], v1 = ({
         "kind": "Variable",
@@ -195,17 +218,23 @@ const node: ConcreteRequest = (function () {
             "name": "valuePublisherPlatform",
             "storageKey": null
         } as any)
-    ], v5 = [
+    ], v5 = ({
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "created",
+        "storageKey": null
+    } as any), v6 = [
         (v1 /*: any*/)
-    ], v6 = [
+    ], v7 = [
         ({
             "alias": null,
             "args": [
                 (v1 /*: any*/),
                 {
                     "kind": "Variable",
-                    "name": "params",
-                    "variableName": "params"
+                    "name": "id",
+                    "variableName": "id"
                 }
             ],
             "concreteType": "BatchJobResponse",
@@ -301,13 +330,115 @@ const node: ConcreteRequest = (function () {
                             "name": "time",
                             "storageKey": null
                         },
+                        (v5 /*: any*/)
+                    ],
+                    "storageKey": null
+                },
+                {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Ads",
+                    "kind": "LinkedField",
+                    "name": "adsList",
+                    "plural": true,
+                    "selections": [
                         {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "created",
+                            "name": "_id",
                             "storageKey": null
-                        }
+                        },
+                        (v3 /*: any*/),
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreationTime",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeBody",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkCaption",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkDescription",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkTitle",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adDeliveryStartTime",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adSnapshotUrl",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "currency",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "publisherPlatforms",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "AdsSpend",
+                            "kind": "LinkedField",
+                            "name": "spend",
+                            "plural": false,
+                            "selections": [
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "lowerBound",
+                                    "storageKey": null
+                                },
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "upperBound",
+                                    "storageKey": null
+                                }
+                            ],
+                            "storageKey": null
+                        },
+                        (v5 /*: any*/)
                     ],
                     "storageKey": null
                 }
@@ -316,7 +447,7 @@ const node: ConcreteRequest = (function () {
         } as any),
         ({
             "alias": null,
-            "args": (v5 /*: any*/),
+            "args": (v6 /*: any*/),
             "concreteType": "ActiveStatusResponse",
             "kind": "LinkedField",
             "name": "getActiveStatusList",
@@ -353,7 +484,7 @@ const node: ConcreteRequest = (function () {
         } as any),
         ({
             "alias": null,
-            "args": (v5 /*: any*/),
+            "args": (v6 /*: any*/),
             "concreteType": "ReachedCountriesResponse",
             "kind": "LinkedField",
             "name": "getReachedCountriesList",
@@ -390,7 +521,7 @@ const node: ConcreteRequest = (function () {
         } as any),
         ({
             "alias": null,
-            "args": (v5 /*: any*/),
+            "args": (v6 /*: any*/),
             "concreteType": "TypeResponse",
             "kind": "LinkedField",
             "name": "getTypeList",
@@ -427,7 +558,7 @@ const node: ConcreteRequest = (function () {
         } as any),
         ({
             "alias": null,
-            "args": (v5 /*: any*/),
+            "args": (v6 /*: any*/),
             "concreteType": "ImpressionConditionResponse",
             "kind": "LinkedField",
             "name": "getImpressionConditionList",
@@ -464,7 +595,7 @@ const node: ConcreteRequest = (function () {
         } as any),
         ({
             "alias": null,
-            "args": (v5 /*: any*/),
+            "args": (v6 /*: any*/),
             "concreteType": "PublisherPlatformResponse",
             "kind": "LinkedField",
             "name": "getPublisherPlatformList",
@@ -491,7 +622,7 @@ const node: ConcreteRequest = (function () {
             "kind": "Fragment",
             "metadata": null,
             "name": "BatchJobSelectEditQuery",
-            "selections": (v6 /*: any*/),
+            "selections": (v7 /*: any*/),
             "type": "Query"
         },
         "kind": "Request",
@@ -499,16 +630,16 @@ const node: ConcreteRequest = (function () {
             "argumentDefinitions": (v0 /*: any*/),
             "kind": "Operation",
             "name": "BatchJobSelectEditQuery",
-            "selections": (v6 /*: any*/)
+            "selections": (v7 /*: any*/)
         },
         "params": {
             "id": null,
             "metadata": {},
             "name": "BatchJobSelectEditQuery",
             "operationKind": "query",
-            "text": "query BatchJobSelectEditQuery(\n  $authToken: String!\n  $params: BatchJobInput!\n) {\n  getBatchJobById(authToken: $authToken, params: $params) {\n    token\n    batchJob {\n      id\n      pageSocial {\n        id\n        internalId\n        name\n        publisherPlatform {\n          idPublisherPlatform\n          valuePublisherPlatform\n        }\n      }\n      adActiveStatus\n      adReachedCountries\n      adType\n      impressionCondition\n      searchTerms\n      time\n      created\n    }\n  }\n  getActiveStatusList(authToken: $authToken) {\n    token\n    activeStatusList {\n      idActiveStatus\n      valueActiveStatus\n    }\n  }\n  getReachedCountriesList(authToken: $authToken) {\n    token\n    reachedCountriesList {\n      idReachedCountries\n      valueReachedCountries\n    }\n  }\n  getTypeList(authToken: $authToken) {\n    token\n    typeList {\n      idType\n      valueType\n    }\n  }\n  getImpressionConditionList(authToken: $authToken) {\n    token\n    impressionConditionList {\n      idImpressionCondition\n      valueImpressionCondition\n    }\n  }\n  getPublisherPlatformList(authToken: $authToken) {\n    token\n    publisherPlatformList {\n      idPublisherPlatform\n      valuePublisherPlatform\n    }\n  }\n}\n"
+            "text": "query BatchJobSelectEditQuery(\n  $authToken: String!\n  $id: ID!\n) {\n  getBatchJobById(authToken: $authToken, id: $id) {\n    token\n    batchJob {\n      id\n      pageSocial {\n        id\n        internalId\n        name\n        publisherPlatform {\n          idPublisherPlatform\n          valuePublisherPlatform\n        }\n      }\n      adActiveStatus\n      adReachedCountries\n      adType\n      impressionCondition\n      searchTerms\n      time\n      created\n    }\n    adsList {\n      _id\n      id\n      adCreationTime\n      adCreativeBody\n      adCreativeLinkCaption\n      adCreativeLinkDescription\n      adCreativeLinkTitle\n      adDeliveryStartTime\n      adSnapshotUrl\n      currency\n      publisherPlatforms\n      spend {\n        lowerBound\n        upperBound\n      }\n      created\n    }\n  }\n  getActiveStatusList(authToken: $authToken) {\n    token\n    activeStatusList {\n      idActiveStatus\n      valueActiveStatus\n    }\n  }\n  getReachedCountriesList(authToken: $authToken) {\n    token\n    reachedCountriesList {\n      idReachedCountries\n      valueReachedCountries\n    }\n  }\n  getTypeList(authToken: $authToken) {\n    token\n    typeList {\n      idType\n      valueType\n    }\n  }\n  getImpressionConditionList(authToken: $authToken) {\n    token\n    impressionConditionList {\n      idImpressionCondition\n      valueImpressionCondition\n    }\n  }\n  getPublisherPlatformList(authToken: $authToken) {\n    token\n    publisherPlatformList {\n      idPublisherPlatform\n      valuePublisherPlatform\n    }\n  }\n}\n"
         }
     } as any;
 })();
-(node as any).hash = '7a28c384248c1421e5f8d2d9cc080509';
+(node as any).hash = '3076f71bef886f5f077e36a4396b709f';
 export default node;

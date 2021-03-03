@@ -10,6 +10,7 @@ module.exports = class BatchJobResponseDTO {
         this.impressionCondition = params.impressionCondition;
         this.searchTerms = params.searchTerms;
         this.time = params.time;
+        this.numAds = params.numAds;
         this.created = params.created;   
     }
 };

@@ -1,6 +1,7 @@
 const IAds = require('../../../application/contracts/IAds');
 const ModelAds = require('../../../entities/mongoose/Ads');
 const AdsResponseBO = require('../../../entities/response/bo/AdsResponseBO');
+const AdsCountResponseBO = require('../../../entities/response/bo/AdsCountResponseBO');
 
 class AdsPersistence extends IAds {
 
@@ -53,23 +54,29 @@ class AdsPersistence extends IAds {
         return new Promise((resolve, reject) => {
 
             let criteria = {
-                page_id: requestBO.page_id
+                page_id: requestBO.page_id,
             };
+            const limit = (requestBO.limit && requestBO.limit > 0) ? requestBO.limit : 10;
+            const offset = (requestBO.page && requestBO.page > 0) ? requestBO.page : 1;
             
-            ModelAds.find(criteria).then((res) => {
+            ModelAds
+                .find(criteria)
+                .skip( (offset-1)*limit )
+                .limit(limit)
+                .then((res) => {
 
-                let boList = res.map((item) => {
+                    let boList = res.map((item) => {
 
-                    return new AdsResponseBO(item);
-                });
+                        return new AdsResponseBO(item);
+                    });
 
-                resolve(boList);
+                    resolve(boList);
+                    
+                }).catch((err) => {
                 
-            }).catch((err) => {
-            
-                console.error(err);
-                reject(err);
-            });
+                    console.error(err);
+                    reject(err);
+                });
         });
     };
 
@@ -84,23 +91,141 @@ class AdsPersistence extends IAds {
             let criteria = {
                 'batch_job_id': requestBO.batch_job_id
             };
+            const limit = (requestBO.limit && requestBO.limit > 0) ? requestBO.limit : 10;
+            const offset = (requestBO.page && requestBO.page > 0) ? requestBO.page : 1;
+            
+            ModelAds
+                .find(criteria)
+                .skip( (offset-1)*limit )
+                .limit(limit)
+                .then((res, err) => {
 
-            ModelAds.find(criteria, (err, res) => {
-                
-                let boList = res.map((item) => {
+                    let boList = res.map((item) => {
 
-                    return new AdsResponseBO(item);
+                        return new AdsResponseBO(item);
+                    });
+
+                    resolve(boList);
+
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    }
+                    
+                    (res) ? resolve(res.map(item => item.id)) : resolve(null);
                 });
+        });
 
-                resolve(boList);
+        // return new Promise((resolve, reject) => {
 
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                }
+        //     let criteria = {
+        //         'batch_job_id': requestBO.batch_job_id
+        //     };
+
+        //     ModelAds.find(criteria, (err, res) => {
                 
-                (res) ? resolve(res.map(item => item.id)) : resolve(null);
-            });
+        //         let boList = res.map((item) => {
+
+        //             return new AdsResponseBO(item);
+        //         });
+
+        //         resolve(boList);
+
+        //         if (err) {
+        //             console.error(err);
+        //             reject(err);
+        //         }
+                
+        //         (res) ? resolve(res.map(item => item.id)) : resolve(null);
+        //     });
+        // });
+    };
+
+    /* 
+     *  count ads by Batch Job ID
+     *
+     */
+    async countAdsByJobId(requestBO) {
+
+        return (
+            Promise.all(
+                requestBO.batch_job_id_list
+                    .map(async (id) => {
+
+                        const criteria = {
+                            'batch_job_id': id
+                        };
+                        
+                        return (
+                            new AdsCountResponseBO({
+                                batch_job_id: id,
+                                count: await ModelAds.countDocuments(criteria).exec(),
+                            })
+                        );
+                    })
+            )
+        );
+    };
+
+    /* 
+     *  Get ads by Batch Job Executed ID
+     *
+     */
+    async getAdsByJobExecutedId(requestBO) {
+
+        return new Promise((resolve, reject) => {
+
+            let criteria = {
+                'batch_job_executed_id': requestBO.batch_job_executed_id
+            };
+            const limit = (requestBO.limit && requestBO.limit > 0) ? requestBO.limit : 10;
+            const offset = (requestBO.page && requestBO.page > 0) ? requestBO.page : 1;
+            
+            ModelAds
+                .find(criteria)
+                .skip( (offset-1)*limit )
+                .limit(limit)
+                .then((res, err) => {
+
+                    let boList = res.map((item) => {
+
+                        return new AdsResponseBO(item);
+                    });
+
+                    resolve(boList);
+
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    }
+                    
+                    (res) ? resolve(res.map(item => item.id)) : resolve(null);
+                });
+        });
+    };
+
+    /* 
+     *  count ads by Batch Job Executed ID
+     *
+     */
+    async countAdsByJobExecutedId(requestBO) {
+
+        return new Promise((resolve, reject) => {
+
+            requestBO.batch_job_executed_id_list
+                .map(async (id) => {
+
+                    const criteria = {
+                        'batch_job_executed_id': id
+                    };
+                    
+                    resolve (
+                        new AdsCountResponseBO({
+                            batch_job_executed_id: id,
+                            count: await ModelAds.countDocuments(criteria).exec(),
+                        })
+                    );
+                })
         });
     };
 
@@ -147,37 +272,6 @@ class AdsPersistence extends IAds {
                 console.error(err);
                 reject(err);
             });
-
-            // is usually an array of ADS - but we handle the single case
-            // if (Array.isArray(requestBO)) {
-
-            //     let res = requestBO.map((item) => {
-
-            //         (new ModelAds(item)).save((err, res) => {
-                
-            //             if (err) {
-                            
-            //                 console.error(err);
-            //                 reject(err);
-            //             }
-        
-            //             return res;
-            //         });
-            //     });
-
-                // resolve(res);
-            // }
-
-            // (new ModelAds(requestBO)).save((err, res) => {
-                
-            //     if (err) {
-                    
-            //         console.error(err);
-            //         reject(err);
-            //     }
-
-            //     resolve(res);
-            // });
         });
     };
 };

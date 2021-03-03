@@ -3,7 +3,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 export default graphql`
     query PageSocialSelectQuery ($authToken: String!, $pageID: ID!, $pageInternalID: ID!) {
     
-        getAdsBySocialPageId (authToken: $authToken, id: $pageID, internalID: $pageInternalID) {
+        getPageSocial (authToken: $authToken, id: $pageID, internalID: $pageInternalID) {
 
             token
             pageSocial {
@@ -15,22 +15,24 @@ export default graphql`
                     valuePublisherPlatform
                 }
             }
-            ads {
-                _id,
-                id,
-                adCreationTime 
-                adCreativeBody 
-                adCreativeLinkCaption 
-                adCreativeLinkDescription 
-                adCreativeLinkTitle 
-                adDeliveryStartTime 
-                adSnapshotUrl 
-                currency 
-                fundingEntity, 
-                pageId, 
-                pageName, 
+            numAds
+            adsList {
+                _id
+                id
+                adCreationTime
+                adCreativeBody
+                adCreativeLinkCaption
+                adCreativeLinkDescription
+                adCreativeLinkTitle
+                adDeliveryStartTime
+                adSnapshotUrl
+                currency
                 publisherPlatforms
-                created,
+                spend {
+                    lowerBound
+                    upperBound
+                }
+                created
             }
         }
     }

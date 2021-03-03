@@ -4,7 +4,10 @@ import React from 'react';
 import BatchJobExecutedType from '../../../_model/types/BatchJobExecutedType';
 
 // GRAPHQL
-import BatchJobExecutedListSelectQueryGraphQL from '../../../_model/relay/query/BatchJobExecutedSelectQuery';
+import { commitMutation } from 'react-relay';
+import environment from '../../relay/environment';
+import BatchJobExecutedListSelectQueryGraphQL from '../../../_model/relay/query/BatchJobExecutedListSelectQuery';
+import BatchJobExecutedListSelectMutationGraphQL from '../../../_model/relay/mutation/BatchJobExecutedListSelectMutation';
 
 // MISCELLANEOUS
 import { exportCSV, socialUtils } from '../../../miscellaneous/';
@@ -13,11 +16,14 @@ import { exportCSV, socialUtils } from '../../../miscellaneous/';
 import './BatchJobsExecutedList.less';
 
 // COMPONENTS
-import PageListComponent from '../_PageListComponent/PageListComponent';
+import PageListComponent from '../_Class/_PageListComponent/PageListComponent';
 import TableList from  '../../components/TableList/TableList';
 
 // STYLE
 import './BatchJobsExecutedList.less';
+
+import moment from 'moment';
+import Pagination from '../../components/Pagination/Pagination';
 
 
 type BatchJobsExecutedListProps = {
@@ -72,14 +78,16 @@ class BatchJobsExecutedListContent extends React.Component<BatchJobsExecutedList
 	constructor(props: BatchJobsExecutedListContentProps) {
     
 		super(props);
-		this.state = {}
+		this.state = { }
 	}
 
 	componentWillMount() {
 		this.setState({ batchJobExecutedList: this.props.body.getBatchJobExecutedList?.batchJobExecutedList });
 	}
 
-	private downloadCSV = (pageSocialInternalId: string): any => {
+	private getCSV = (batchJobId: number, pageSocialInternalId: string): any => {
+
+		alert("Add this function!")
 
 		// const variables = {
 		// 	pageInternalId: pageSocialInternalId,
@@ -97,33 +105,121 @@ class BatchJobsExecutedListContent extends React.Component<BatchJobsExecutedList
 		// 	});
 	}
 
-	private serializeData = (): any => {
+	// private serializeData = (): any => {
 
-		let data: any[] = [];
+	// 	let data: any[] = [];
 
-		data = this.state.batchJobExecutedList?.map((item: BatchJobExecutedType) => {
+	// 	data = this.state.batchJobExecutedList?.map((item: BatchJobExecutedType) => {
 	
-			if (!item) return {};
+	// 		if (!item) return {};
 
-			return {
-				"id": 								item.id,
-				"internalId": 				socialUtils.getLinkSocialPlatform(item.batchJob.pageSocial.publisherPlatform.idPublisherPlatform, item.batchJob.pageSocial.internalId), 
-				"name": 							item.batchJob.pageSocial.name, 
-				"publisherPlatform": 	item.batchJob.pageSocial.publisherPlatform.valuePublisherPlatform, 
-				"view": 							<a href={`page-social/${item.id}`}>View</a>, 
-				"exportCSV": 					<button onClick={() => this.downloadCSV(item.batchJob.pageSocial.internalId)}>Export CSV</button>,
-			};
-		});
+	// 		return {
+	// 			"id": 								item.id,
+	// 			"internalId": 				socialUtils.getLinkSocialPlatform(item.batchJob.pageSocial.publisherPlatform.idPublisherPlatform, item.batchJob.pageSocial.internalId), 
+	// 			"name": 							item.batchJob.pageSocial.name, 
+	// 			"publisherPlatform": 	item.batchJob.pageSocial.publisherPlatform.valuePublisherPlatform, 
+	// 			"view": 							<a href={`page-social/${item.id}`}>View</a>, 
+	// 			"exportCSV": 					<button onClick={() => this.downloadCSV(item.batchJob.pageSocial.internalId)}>Export CSV</button>,
+	// 		};
+	// 	});
 
-		return {
-			"header": ["ID", "Social ID", "Name", "Platform", "", ""],
-			"content": data
-		};
-	}
+	// 	return {
+	// 		"header": ["ID", "Social ID", "Name", "Platform", "", ""],
+	// 		"content": data
+	// 	};
+	// }
+
+	private changePagination = () => {
+
+		const list: BatchJobExecutedType[] = [];
+		
+		commitMutation(
+			environment,
+			{
+				mutation: BatchJobExecutedListSelectMutationGraphQL,
+				variables: { limit: 10, page: 1 },
+				// variables: { params: data },
+				onCompleted: (response) => {
+					
+					alert(JSON.stringify(response))
+					console.log(response)
+					// this.setState({ redirect: true });
+				},
+			},
+		);
+
+		this.setState({ batchJobExecutedList: list});
+	};
 
 	render() {
 		return (
 			<section id="batch-job-executed-list">
+				<div className="custom-table">
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th className="text-center">Ads</th>
+								<th>Time</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{
+								this.state.batchJobExecutedList?.map((item: BatchJobExecutedType, index: number) => {
+										
+									if (!item) return <></>;
+
+									let timeExecuted = moment(item.created, "YYYY-MM-DDTHH:mm:ss a");
+
+									return (
+										<tr key={index}>
+											<td>
+												<div className="foreground">
+													{ item.batchJob.pageSocial.name }
+												</div>
+												<div className="background internal-id">
+													{ item.batchJob.pageSocial.internalId }
+												</div>
+											</td>
+											<td className="num-ads text-center">
+												{ item.numAds }
+											</td>
+											<td>
+												<div>{ timeExecuted.format("HH:mm") }</div>
+												<div className="background">{ timeExecuted.format("DD/MM/YYYY") }</div>
+											</td>
+											<td className="search-keywords">
+												{ (item.byBatch) ? "Batch" : "Manual" }
+											</td>
+											<td style={{ textAlign: "right" }}>
+												<button 
+													className="btn export-csv"
+													onClick={() => this.getCSV(0, "123")}
+												>
+													Export CSV
+												</button>
+												<a 
+													className="button view-details"
+													href={`/batch-job-executed/${item.id}`}
+												>
+													View Job
+												</a>
+											</td>
+										</tr>
+									);
+								})
+							}
+						</tbody>
+					</table>
+					<Pagination 
+						numElementPage={ 10 }
+						totalElement={ 43 }
+						changePageHandler={ this.changePagination }
+					/>
+				</div>
+				{/* 
  				<TableList 
  					data={ this.serializeData() }
  					// TODO
@@ -132,96 +228,10 @@ class BatchJobsExecutedListContent extends React.Component<BatchJobsExecutedList
  					// totalElement={ this.serializeData().content.length }
  					numElementPage={ 10 }
  				/>
+				  */}
  			</section>
 		);
 	}
 }
 
 export default BatchJobsExecutedList;
-
-
-
-
-
-// import React from 'react';
-// import moment from 'moment';
-
-// // CONFIG
-// import Config from '../../../const/config';
-
-// // MODEL
-// // import FacebookAds from '../../../_model/types/facebook-ads-objects/facebook-ads-class';
-// // import HttpResponse from '../../../_model/types/http-response';
-
-// // GRAPHQL RELAY
-// import RelayRenderer from '../../relay/RelayRenderer';
-// import batchJobExecutedQueryGraphQL from '../../../_model/relay/query/BatchJobExecutedSelectQuery';
-
-// // MISCELLANEOUS
-// import { socialUtils } from '../../../miscellaneous/';
-
-// // STYLE
-// import './BatchJobsExecutedList.less';
-
-// // COMPONENTS
-// import TableList from  '../../components/TableList/TableList';
-
-
-// type BatchJobsExecutedListProps = {
-// 	body: any
-// };
-
-// export default class BatchJobsExecutedList extends React.PureComponent<BatchJobsExecutedListProps, {}> {
-
-// 	constructor(props: BatchJobsExecutedListProps) {
-	
-// 		super(props);
-// 		this.state = {};
-// 	}
-	
-// 	componentDidMount() {
-// 	}
-	
-// 	serializeData = (): any => {
-
-// 		let data: any[] = [];
-
-// 		data = this.props.body.getBatchJobExecutedList?.batchJobExecutedList	?.map((item) => {
-	
-// 			if (!item) return {};
-
-// 			return {
-// 				"id": item.id, 
-// 				"internalId": socialUtils.getLinkSocialPlatform(item.pageSocial.publisherPlatform.idPublisherPlatform, item.pageSocial.internalId), 
-// 				"name": item.pageSocial.name, 
-// 				"keywords": (item.pageSocial.searchTerms) ? item.pageSocial.searchTerms : "--", 
-// 				"timeExecuted": moment(item.created, "YYYY-MM-DDTHH:mm:ss.SSSZ").format("DD/MM/YYYY - HH:mm"), 
-// 				"isBatch": (item.byBatch) ? "Sì" : "No", 
-// 			};
-// 		});
-
-// 		return {
-// 			"header": ["#", "Page URL", " Page Name", "Keywords", "Date Executed", "Batch"],
-// 			"content": data
-// 		};
-// 	}
-	
-// 	getJobsExecuted = (limit: number, page: number): void => {
-
-// 		// TODO
-// 		// Use GraphQL Pagination
-// 		alert('getJobExecuted: ' + limit + " - " + page);
-// 	}
-    
-// 	render() {
-// 		return (
-// 			<section id="batch-job-executed-list">
-// 				<TableList 
-// 					data={ this.serializeData() } 
-// 					changePageHandler={ this.getJobsExecuted } 
-// 					numElementPage={ 10 } 
-// 				/>
-// 			</section>
-// 		);
-// 	}
-// }

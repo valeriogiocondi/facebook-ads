@@ -87,7 +87,9 @@ class FacebookApiController {
          *
          *  recursive function
          */
-        let saveAdsPagination = async (adsPayload, batchJobId) => {
+        let saveAdsPagination = async (adsPayload, batchJobId, batchJobExecutedId, x) => {
+
+            let numAds = 0;
 
             /* 
              * Check if ADS are already in DB
@@ -108,13 +110,13 @@ class FacebookApiController {
                         .filter(item => !responseMessage.payload.includes(item.id))
                         .map((item) => {
                             item.batch_job_id = batchJobId; 
+                            item.batch_job_executed_id = batchJobExecutedId; 
                             return item;
                         });
 
             if (adsToSave.length > 0) {
 
                 /* 
-
                 *  TODO
                 *  The response.data must be
                 *
@@ -134,13 +136,15 @@ class FacebookApiController {
     
                     serviceREST.get(adsPayload.paging.next).then((response) => {
     
-                        saveAdsPagination(response);
+                        numAds = x + saveAdsPagination(response, batchJobId, batchJobExecutedId, x);
                     });
                 }
             }
+
+            return numAds;
         };
 
-        return FacebookApiUseCase.getAdsList(params).then((response) => {
+        return FacebookApiUseCase.getAdsList(params).then( async (response) => {
 
             if (response.error) {
                 
@@ -180,6 +184,8 @@ class FacebookApiController {
             }
 
             if (response.data) {
+
+                let batchJobExecutedId;
                 
                 /* 
                 *  SAVE JOB AS EXECUTED 
@@ -192,7 +198,7 @@ class FacebookApiController {
                         byBatch: params.by_batch,
                     };
 
-                    RabbitMQ_layer.joinWith( "batch-job.executed.save", { body: job } );
+                    batchJobExecutedId = (await RabbitMQ_layer.joinWith( "batch-job.executed.save", { body: job } )).payload.id; 
                     
                 } catch (err) {
 
@@ -201,8 +207,57 @@ class FacebookApiController {
                 
                 /* 
                  *  SAVE ADS 
+
+                    var fib = (x) => {
+
+                        var y=0;
+                        
+                        if (x>0)
+                        y = x + fib(x-1);
+                        
+                    return y
+                        
+                    }
+
+
+                    var res = fib(4);
+
+                    alert(res)
+                    
                  */
-                saveAdsPagination(response, params.batch_job_id);
+                // TODO get ads num
+                const numAdsSaved = 0;
+                saveAdsPagination(response, params.batch_job_id, batchJobExecutedId);
+                
+                /* 
+                 *  UPDATE NUM ADS - BatchJob Executed 
+                 */
+                const requestBatchJobBO = {
+                    id:     batchJobExecutedId,
+                    numAds: numAdsSaved,
+                }
+                RabbitMQ_layer.joinWith("batch-job.executed.update", { body: requestBatchJobBO } )
+
+
+                /* 
+                 *  UPDATE NUM ADS - BatchJob 
+                 */
+                const requestBatchJobExecutedBO = {
+                    id:     params.batch_job_id,
+                    numAds: numAdsSaved,
+                }
+                RabbitMQ_layer.joinWith("batch-job.update", { body: requestBatchJobExecutedBO } )
+
+
+                /* 
+                 *  UPDATE NUM ADS - Page Social
+                 */
+                const requestPageSocialBO = {
+                    id:     params.page_social_id,
+                    numAds: numAdsSaved,
+                }
+                RabbitMQ_layer.joinWith("page-social.update", { body: requestPageSocialBO } )
+
             }
             
             // TODO

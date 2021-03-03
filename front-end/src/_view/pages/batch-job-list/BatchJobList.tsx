@@ -19,16 +19,15 @@ import { exportCSV, socialUtils } from '../../../miscellaneous/';
 import RestService from '../../../services/RestService';
 
 // COMPONENTS
-import PageListComponent from '../_PageListComponent/PageListComponent';
+import PageListComponent from '../_Class/_PageListComponent/PageListComponent';
 import TableList from  '../../components/TableList/TableList';
 
 // STYLE
 import './BatchJobList.less';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
-	DeleteForever, 
-	Description, 
-	PictureAsPdf 
-} from '@material-ui/icons';	
+	faEye,
+} from '@fortawesome/free-solid-svg-icons'
 
 
 type BatchJobListProps = {
@@ -192,33 +191,6 @@ class BatchJobListContent extends React.Component<BatchJobListContentProps, Batc
 			});
 	}
 	
-	private serializeData = (): any => {
-
-		let data: any[] = [];
-
-		data = this.state.batchJobList?.map((item: BatchJobType) => {
-	
-			if (!item) return {};
-
-			return {
-				"id": 					item.id, 
-				"internalId": 	socialUtils.getLinkSocialPlatform(item.pageSocial.publisherPlatform.idPublisherPlatform, item.pageSocial.internalId), 
-				"name": 				item.pageSocial.name, 
-				"keywords": 		(item.searchTerms) ? item.searchTerms : "--", 
-				"time": 				item.time, 
-				"getData": 			<button id="fetchData" onClick={(e) => this.fetchData(item)}> GET DATA </button>, 
-				"exportCSV": 		<button onClick={(e) => this.getCSV(item.id, item.pageSocial.internalId)}> <PictureAsPdf /> </button>, 
-				"viewJob": 			<Link to={"/batch-job/view/" + item.id} key={ item.id } className="link"> <Description /> </Link>, 
-				"deleteJob": 		<button className="button" onClick={(e) => this.delete(item.id)}> <DeleteForever /> </button>, 
-			};
-		});
-
-		return {
-			"header": ["#", "Page URL", "Name", "Keywords", "Time", "", "", "", ""],
-			"content": data
-		};
-	}
-	
 	getJobsExecuted = (limit: number, page: number): void => {
 
 		// TODO
@@ -229,6 +201,69 @@ class BatchJobListContent extends React.Component<BatchJobListContentProps, Batc
 	render() {
 		return (
 			<section id="batch-job-list">
+				<div className="custom-table">
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th className="text-center">Ads</th>
+								<th>Time</th>
+								<th className="text-center">Keywords</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{
+								this.state.batchJobList?.map((item: BatchJobType) => {
+										
+									if (!item) return <></>;
+
+									return (
+										<tr>
+											<td>
+												<div className="foreground">{ item.pageSocial.name }</div>
+												<div className="background internal-id">{ item.pageSocial.internalId }</div>
+											</td>
+											<td className="num-ads text-center">
+												{ item.numAds }
+											</td>
+											<td>
+												<div>{ item.time }</div>
+												<div className="background">Every day</div>
+											</td>
+											<td className="search-keywords text-center">
+												{ (item.searchTerms) ? item.searchTerms : "--" }
+											</td>
+											<td className="text-right">
+												<button 
+													className="btn export-csv"
+													onClick={() => this.fetchData(item)}
+												>
+													GET DATA
+												</button>
+											</td>
+											<td className="text-right">
+												<button 
+													className="btn export-csv"
+													onClick={() => this.getCSV(item.id, item.pageSocial.internalId)}
+												>
+													Export CSV
+												</button>
+												<a 
+													className="button view-details"
+													href={`/batch-job/view/${item.id}`}
+												>
+													View / Edit
+												</a>
+											</td>
+										</tr>
+									)
+								})
+							}
+						</tbody>
+					</table>
+				</div>
+				{/* 
  				<TableList 
  					data={ this.serializeData() }
  					// TODO
@@ -236,7 +271,8 @@ class BatchJobListContent extends React.Component<BatchJobListContentProps, Batc
 
  					// totalElement={ this.serializeData().content.length }
  					numElementPage={ 10 }
- 				/>
+				 />
+				  */}
  			</section>
 		);
 	}

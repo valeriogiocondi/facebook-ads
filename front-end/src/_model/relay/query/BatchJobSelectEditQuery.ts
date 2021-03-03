@@ -1,9 +1,9 @@
 import { graphql } from 'babel-plugin-relay/macro';
 
 export default graphql`
-    query BatchJobSelectEditQuery($authToken: String!, $params: BatchJobInput!) { 
+    query BatchJobSelectEditQuery($authToken: String!, $id: ID!) { 
     
-        getBatchJobById(authToken: $authToken, params: $params) {
+        getBatchJobById(authToken: $authToken, id: $id) {
             token
             batchJob {
                 id
@@ -22,6 +22,24 @@ export default graphql`
                 impressionCondition
                 searchTerms
                 time
+                created
+            }
+            adsList {
+                _id
+                id
+                adCreationTime
+                adCreativeBody
+                adCreativeLinkCaption
+                adCreativeLinkDescription
+                adCreativeLinkTitle
+                adDeliveryStartTime
+                adSnapshotUrl
+                currency
+                publisherPlatforms
+                spend {
+                    lowerBound
+                    upperBound
+                }
                 created
             }
         }

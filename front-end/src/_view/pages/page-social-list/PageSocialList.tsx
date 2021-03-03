@@ -16,11 +16,12 @@ import AdsBySocialPageIdSelectQueryGraphQL from '../../../_model/relay/query/Ads
 import './PageSocialList.less';
 
 // COMPONENTS
-import PageListComponent from '../_PageListComponent/PageListComponent';
+import PageListComponent from '../_Class/_PageListComponent/PageListComponent';
 import TableList from  '../../components/TableList/TableList';
 
 // STYLE
 import './PageSocialList.less';
+import { Description } from '@material-ui/icons';
 
 
 type PageSocialListProps = {
@@ -62,9 +63,9 @@ class PageSocialList<PageSocialListProps, PageSocialListState> extends PageListC
 
 
 type PageSocialListContentProps = {
-	queryGraphQL: 			any
-	params: 						any
-	body: 							any
+	queryGraphQL: 	any
+	params: 				any
+	body: 					any
 };
 type PageSocialListContentState = {
 	pageSocialList?: 		Array<PageSocialType>	
@@ -116,41 +117,72 @@ class PageSocialListContent extends React.Component<PageSocialListContentProps, 
 			});
 	}
 
-	private serializeData = (): any => {
-
-		let data: any[] = [];
-
-		data = this.state.pageSocialList?.map((item: PageSocialType) => {
-		
-			if (!item) return {};
-
-			return {
-				"id": 								item.id,
-				"internalId": 				socialUtils.getLinkSocialPlatform(item.publisherPlatform.idPublisherPlatform, item.internalId), 
-				"name": 							item.name, 
-				"publisherPlatform": 	item.publisherPlatform.valuePublisherPlatform, 
-				"view": 							<a href={`page-social/${item.id}/${item.internalId}`}>View</a>, 
-				"exportCSV": 					<button onClick={() => this.getCSV(item.internalId)}>Export CSV</button>,
-			};
-		});
-
-		return {
-			"header": ["ID", "Social ID", "Name", "Platform", "", ""],
-			"content": data
-		};
-	}
-
 	render() {
 		return (
 			<section id="page-social-list">
- 				<TableList 
- 					data={ this.serializeData() }
- 					// TODO
- 					// calculate total element - just data.length
+				<div className="custom-table">
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th className="text-center">Ads</th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{
+								this.state.pageSocialList?.map((item: PageSocialType) => {
+										
+									if (!item) return <></>;
 
- 					// totalElement={ this.serializeData().content.length }
- 					numElementPage={ 10 }
- 				/>
+									return (
+										<tr>
+											<td>
+												<div className="foreground">{ item.name }</div>
+												<div className="background internal-id">{ item.internalId }</div>
+											</td>
+											<td className="num-ads text-center">33.000</td>
+											<td className="social">
+												<div>
+													<a 
+														className="link"
+														href={ socialUtils.getLinkSocialPlatform(item.publisherPlatform.idPublisherPlatform, item.internalId) }
+														target="_blank"
+													>
+														View on social
+													</a>
+												</div>
+												<div className="background">
+													{ item.publisherPlatform.valuePublisherPlatform }
+												</div>
+											</td>
+											<td>
+												<div>Last update</div>
+												<div className="background">08/01/2021</div>
+											</td>
+											<td style={{ textAlign: "right" }}>
+												<button 
+													className="btn export-csv"
+													onClick={() => this.getCSV(item.internalId)}
+												>
+													Export CSV
+												</button>
+												<a 
+													className="button view-details"
+													href={`page-social/${item.id}/${item.internalId}`}
+												>
+													View
+												</a>
+											</td>
+										</tr>
+									)
+								})
+							}
+						</tbody>
+					</table>
+				</div>
  			</section>
 		);
 	}

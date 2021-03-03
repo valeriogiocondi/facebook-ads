@@ -3,10 +3,6 @@ const ModelBatchJobExecuted = require('../../../entities/sequelize/BatchJobExecu
 const BatchJobExecutedResponseBO = require('../../../entities/response/bo/BatchJobExecutedResponseBO');
 const ModelBatchJob = require('../../../entities/sequelize/BatchJobModel');
 
-// const ModelPageSocial = require('../../../entities/sequelize/PageSocialModel');
-// const ModelAdsPublisherPlatform = require('../../../entities/sequelize/AdsPublisherPlatformModel');
-// const ModelAds = require('../../../entities/sequelize/AdsModel');
-
 class BatchJobExecutedPersistence extends IBatchJobExecuted {
 
     /* 
@@ -22,6 +18,9 @@ class BatchJobExecutedPersistence extends IBatchJobExecuted {
                 limit: requestBO.limit, 
                 offset: requestBO.page-1, 
             };
+
+            if (!criteria.limit) criteria.limit = 10;
+            if (!criteria.offset) criteria.offset = 1;
             
             // fk - BATCH_JOB_DAT
             ModelBatchJob.hasMany(ModelBatchJobExecuted, { foreignKey: 'batch_job_id' });
@@ -51,10 +50,46 @@ class BatchJobExecutedPersistence extends IBatchJobExecuted {
     };
 
     /* 
-     *  Get batch job executed by id
+     *  Get batch job executed by $id
      *
      */
-    async getByJobId(requestBO) {
+    async getById(requestBO) {
+    
+        return new Promise((resolve, reject) => {
+
+            let criteria = {
+                where: { id: requestBO.id },
+            };
+            
+            // fk - BATCH_JOB_DAT
+            ModelBatchJob.hasMany(ModelBatchJobExecuted, { foreignKey: 'batch_job_id' });
+            ModelBatchJobExecuted.belongsTo(ModelBatchJob, { foreignKey: 'batch_job_id' });
+            
+            ModelBatchJobExecuted
+                .findOne({
+                    include: [
+                        { model: ModelBatchJob },
+                    ],
+                    ...criteria,
+                }).then((result) => {
+                    
+                    resolve(new BatchJobExecutedResponseBO(result));
+
+                }).catch((err) => {
+                
+                    console.error(err);
+                    reject(result);
+                }
+            );
+        });
+    };
+
+
+    /* 
+     *  Get batch job executed by $batch_job_id
+     *
+     */
+    async getByBatchJobId(requestBO) {
         
         return new Promise((resolve, reject) => {
 
@@ -97,14 +132,8 @@ class BatchJobExecutedPersistence extends IBatchJobExecuted {
         return new Promise((resolve, reject) => {
 
             let criteria = { 
-                where: { batch_job_id: requestBO.id },
-                include: [
-                    // { model: ModelAds }
-                ]
+                where: { batch_job_id: requestBO.batch_job_id }
             };
-            
-            // ModelBatchJobExecuted.belongsToMany(ModelAds, { through: 'BATCH_JOB_EXECUTED_TO_ADS_REL' });
-            // ModelAds.belongsToMany(ModelBatchJobExecuted, { through: 'BATCH_JOB_EXECUTED_TO_ADS_REL' });
 
             ModelBatchJobExecuted.findAll(criteria).then((result) => {
 

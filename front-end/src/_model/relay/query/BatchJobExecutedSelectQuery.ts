@@ -1,12 +1,12 @@
 import { graphql } from 'babel-plugin-relay/macro';
 
 export default graphql`
-    query BatchJobExecutedSelectQuery($authToken: String!, $limit: Int, $page: Int) {
+    query BatchJobExecutedSelectQuery($authToken: String!, $id: ID!) {
         
-        getBatchJobExecutedList(authToken: $authToken, limit: $limit, page: $page) {
+      getBatchJobExecutedById(authToken: $authToken, id: $id) {
 
             token
-            batchJobExecutedList {
+            batchJobExecuted {
                 id
                 batchJob {
                     id
@@ -21,8 +21,28 @@ export default graphql`
                     }
                 }
                 byBatch
+                numAds
                 created
             }
+            adsList {
+                _id
+                id
+                adCreationTime
+                adCreativeBody
+                adCreativeLinkCaption
+                adCreativeLinkDescription
+                adCreativeLinkTitle
+                adDeliveryStartTime
+                adSnapshotUrl
+                currency
+                publisherPlatforms
+                spend {
+                    lowerBound
+                    upperBound
+                }
+                created
+            }
+
         }        
     }
 `

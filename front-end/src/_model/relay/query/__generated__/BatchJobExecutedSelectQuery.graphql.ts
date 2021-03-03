@@ -4,13 +4,12 @@
 import { ConcreteRequest } from "relay-runtime";
 export type BatchJobExecutedSelectQueryVariables = {
     authToken: string;
-    limit?: number | null;
-    page?: number | null;
+    id: string;
 };
 export type BatchJobExecutedSelectQueryResponse = {
-    readonly getBatchJobExecutedList: {
+    readonly getBatchJobExecutedById: {
         readonly token: string;
-        readonly batchJobExecutedList: ReadonlyArray<{
+        readonly batchJobExecuted: {
             readonly id: string;
             readonly batchJob: {
                 readonly id: string;
@@ -25,8 +24,27 @@ export type BatchJobExecutedSelectQueryResponse = {
                 };
             };
             readonly byBatch: number;
+            readonly numAds: number | null;
             readonly created: string | null;
-        } | null>;
+        };
+        readonly adsList: ReadonlyArray<{
+            readonly _id: string | null;
+            readonly id: string | null;
+            readonly adCreationTime: string | null;
+            readonly adCreativeBody: string | null;
+            readonly adCreativeLinkCaption: string | null;
+            readonly adCreativeLinkDescription: string | null;
+            readonly adCreativeLinkTitle: string | null;
+            readonly adDeliveryStartTime: string | null;
+            readonly adSnapshotUrl: string | null;
+            readonly currency: string | null;
+            readonly publisherPlatforms: ReadonlyArray<string | null> | null;
+            readonly spend: {
+                readonly lowerBound: string | null;
+                readonly upperBound: string | null;
+            } | null;
+            readonly created: string | null;
+        } | null> | null;
     } | null;
 };
 export type BatchJobExecutedSelectQuery = {
@@ -39,12 +57,11 @@ export type BatchJobExecutedSelectQuery = {
 /*
 query BatchJobExecutedSelectQuery(
   $authToken: String!
-  $limit: Int
-  $page: Int
+  $id: ID!
 ) {
-  getBatchJobExecutedList(authToken: $authToken, limit: $limit, page: $page) {
+  getBatchJobExecutedById(authToken: $authToken, id: $id) {
     token
-    batchJobExecutedList {
+    batchJobExecuted {
       id
       batchJob {
         id
@@ -59,6 +76,25 @@ query BatchJobExecutedSelectQuery(
         }
       }
       byBatch
+      numAds
+      created
+    }
+    adsList {
+      _id
+      id
+      adCreationTime
+      adCreativeBody
+      adCreativeLinkCaption
+      adCreativeLinkDescription
+      adCreativeLinkTitle
+      adDeliveryStartTime
+      adSnapshotUrl
+      currency
+      publisherPlatforms
+      spend {
+        lowerBound
+        upperBound
+      }
       created
     }
   }
@@ -76,14 +112,8 @@ const node: ConcreteRequest = (function () {
         ({
             "defaultValue": null,
             "kind": "LocalArgument",
-            "name": "limit",
-            "type": "Int"
-        } as any),
-        ({
-            "defaultValue": null,
-            "kind": "LocalArgument",
-            "name": "page",
-            "type": "Int"
+            "name": "id",
+            "type": "ID!"
         } as any)
     ], v1 = ({
         "alias": null,
@@ -91,7 +121,13 @@ const node: ConcreteRequest = (function () {
         "kind": "ScalarField",
         "name": "id",
         "storageKey": null
-    } as any), v2 = [
+    } as any), v2 = ({
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "created",
+        "storageKey": null
+    } as any), v3 = [
         ({
             "alias": null,
             "args": [
@@ -102,18 +138,13 @@ const node: ConcreteRequest = (function () {
                 },
                 {
                     "kind": "Variable",
-                    "name": "limit",
-                    "variableName": "limit"
-                },
-                {
-                    "kind": "Variable",
-                    "name": "page",
-                    "variableName": "page"
+                    "name": "id",
+                    "variableName": "id"
                 }
             ],
-            "concreteType": "BatchJobExecutedListResponse",
+            "concreteType": "BatchJobExecutedResponse",
             "kind": "LinkedField",
-            "name": "getBatchJobExecutedList",
+            "name": "getBatchJobExecutedById",
             "plural": false,
             "selections": [
                 {
@@ -128,8 +159,8 @@ const node: ConcreteRequest = (function () {
                     "args": null,
                     "concreteType": "BatchJobExecuted",
                     "kind": "LinkedField",
-                    "name": "batchJobExecutedList",
-                    "plural": true,
+                    "name": "batchJobExecuted",
+                    "plural": false,
                     "selections": [
                         (v1 /*: any*/),
                         {
@@ -206,9 +237,118 @@ const node: ConcreteRequest = (function () {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "created",
+                            "name": "numAds",
                             "storageKey": null
-                        }
+                        },
+                        (v2 /*: any*/)
+                    ],
+                    "storageKey": null
+                },
+                {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Ads",
+                    "kind": "LinkedField",
+                    "name": "adsList",
+                    "plural": true,
+                    "selections": [
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "_id",
+                            "storageKey": null
+                        },
+                        (v1 /*: any*/),
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreationTime",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeBody",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkCaption",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkDescription",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adCreativeLinkTitle",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adDeliveryStartTime",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "adSnapshotUrl",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "currency",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "publisherPlatforms",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "AdsSpend",
+                            "kind": "LinkedField",
+                            "name": "spend",
+                            "plural": false,
+                            "selections": [
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "lowerBound",
+                                    "storageKey": null
+                                },
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "upperBound",
+                                    "storageKey": null
+                                }
+                            ],
+                            "storageKey": null
+                        },
+                        (v2 /*: any*/)
                     ],
                     "storageKey": null
                 }
@@ -222,7 +362,7 @@ const node: ConcreteRequest = (function () {
             "kind": "Fragment",
             "metadata": null,
             "name": "BatchJobExecutedSelectQuery",
-            "selections": (v2 /*: any*/),
+            "selections": (v3 /*: any*/),
             "type": "Query"
         },
         "kind": "Request",
@@ -230,16 +370,16 @@ const node: ConcreteRequest = (function () {
             "argumentDefinitions": (v0 /*: any*/),
             "kind": "Operation",
             "name": "BatchJobExecutedSelectQuery",
-            "selections": (v2 /*: any*/)
+            "selections": (v3 /*: any*/)
         },
         "params": {
             "id": null,
             "metadata": {},
             "name": "BatchJobExecutedSelectQuery",
             "operationKind": "query",
-            "text": "query BatchJobExecutedSelectQuery(\n  $authToken: String!\n  $limit: Int\n  $page: Int\n) {\n  getBatchJobExecutedList(authToken: $authToken, limit: $limit, page: $page) {\n    token\n    batchJobExecutedList {\n      id\n      batchJob {\n        id\n        pageSocial {\n          id\n          internalId\n          name\n          publisherPlatform {\n            idPublisherPlatform\n            valuePublisherPlatform\n          }\n        }\n      }\n      byBatch\n      created\n    }\n  }\n}\n"
+            "text": "query BatchJobExecutedSelectQuery(\n  $authToken: String!\n  $id: ID!\n) {\n  getBatchJobExecutedById(authToken: $authToken, id: $id) {\n    token\n    batchJobExecuted {\n      id\n      batchJob {\n        id\n        pageSocial {\n          id\n          internalId\n          name\n          publisherPlatform {\n            idPublisherPlatform\n            valuePublisherPlatform\n          }\n        }\n      }\n      byBatch\n      numAds\n      created\n    }\n    adsList {\n      _id\n      id\n      adCreationTime\n      adCreativeBody\n      adCreativeLinkCaption\n      adCreativeLinkDescription\n      adCreativeLinkTitle\n      adDeliveryStartTime\n      adSnapshotUrl\n      currency\n      publisherPlatforms\n      spend {\n        lowerBound\n        upperBound\n      }\n      created\n    }\n  }\n}\n"
         }
     } as any;
 })();
-(node as any).hash = 'd9d8608f0806eb5f4d82ed38476cffd3';
+(node as any).hash = '5e22cafd0ed079177ed6b91ded9ccc02';
 export default node;

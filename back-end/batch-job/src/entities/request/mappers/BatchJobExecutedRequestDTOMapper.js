@@ -8,6 +8,7 @@ class BatchJobRequestExecutedDTOMapper {
         let converter = (bo) => {
 
             let obj = {
+                id: bo.id,
                 batchJobId: bo.batch_job_id,
                 pageSocialId: bo.page_social_id,
                 byBatch: bo.by_batch,
@@ -32,6 +33,7 @@ class BatchJobRequestExecutedDTOMapper {
         let converter = (dto) => {
             
            let obj = {
+                id: dto.id,
                 batch_job_id: dto.batchJobId,
                 page_social_id: dto.pageSocialId,
                 by_batch: dto.byBatch,

@@ -9,6 +9,12 @@
 **/.pnp
 **/.pnp.js
 
+# container
+**/_mongo
+**/_mysql
+**/rabbitmq
+**/.erlang.cookie
+
 # testing
 **/coverage
 
@@ -23,6 +29,7 @@
 **/.env.production.local
 **/.env
 **/*.csv
+**/*.sh
 
 **/*.txt
 **/*.pem

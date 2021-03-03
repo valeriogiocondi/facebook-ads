@@ -3,6 +3,9 @@ import React, { Fragment } from 'react';
 // REACT-ROUTER
 import { Link, Redirect } from 'react-router-dom';
 
+// MODEL
+import BatchJobType from '../../../_model/types/BatchJobType';
+
 // GRAPHQL RELAY
 import { commitMutation } from 'react-relay';
 import environment from '../../relay/environment';
@@ -16,23 +19,26 @@ import editQueryGraphQL from '../../../_model/relay/mutation/BatchJobEditQuery';
 import './BatchJob.less';
 import { KeyboardBackspace } from '@material-ui/icons';
 
+import AdsListTable from '../../components/AdsListTable/AdsListTable';
+
+
 let pageTypes = ["new", "view"];
 
 type BatchJobNewContentProps = {
 	match: any,
 }
 
-export default class BatchJob extends React.PureComponent<BatchJobNewContentProps, {}> {
+class BatchJob extends React.PureComponent<BatchJobNewContentProps, {}> {
 
 	constructor(props: BatchJobNewContentProps) {
 	
 		super(props);
-			this.state = {};
-    }
+		this.state = {};
+	}
 
-    componentDidMount() {
-	
-    }
+	componentDidMount() {
+
+	}
         
 	render() {
 
@@ -49,11 +55,7 @@ export default class BatchJob extends React.PureComponent<BatchJobNewContentProp
 			<Fragment>
 				<RelayRenderer
 					query={ (this.props.match.params.type === pageTypes[0]) ? selectNewQueryGraphQL : selectEditQueryGraphQL }
-					params={
-						{
-							params: data,
-						}
-					} 
+					params={ data } 
 				>
 					<BatchJobContent body="" match={this.props.match} />
 				</RelayRenderer>
@@ -70,17 +72,19 @@ type BatchJobContentProps = {
 	match: any,
 }
 type BatchJobContentState = {
-	id: number,
-	pageId: number,
-	pageInternalId: string,
-	pageName: string,
-	publisherPlatformId: number,
-	adActiveStatus: number,
-	adReachedCountries: number,
-	adType: number,
-	impressionCondition: number,
-	searchTerms: string,
-	time: string,
+	batchJob: BatchJobType,
+
+	// id: number,
+	// pageId: number,
+	// pageInternalId: string,
+	// pageName: string,
+	// publisherPlatformId: number,
+	// adActiveStatus: number,
+	// adReachedCountries: number,
+	// adType: number,
+	// impressionCondition: number,
+	// searchTerms: string,
+	// time: string,
 	redirect: boolean,
 }
 
@@ -90,100 +94,114 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
     
 		super(props);
 		this.state = {
-			id: null,
-			pageId: null,
-			pageInternalId: null,
-			pageName: null,
-			publisherPlatformId: null,
-			adActiveStatus: null,
-			adReachedCountries: null,
-			adType: null,
-			impressionCondition: null,
-			searchTerms: null,
-			time: null,
+			batchJob: null,
+
+			// id: null,
+			// pageId: null,
+			// pageInternalId: null,
+			// pageName: null,
+			// publisherPlatformId: null,
+			// adActiveStatus: null,
+			// adReachedCountries: null,
+			// adType: null,
+			// impressionCondition: null,
+			// searchTerms: null,
+			// time: null,
 			redirect: false,
 		}
 	}
 
-    componentDidMount() {
+	componentWillMount() {
 		
-		/* 
-		 *	TODO
-		 *	Call ENUMS
-		 *	move into Controller
-		 */
-		
-		if (this.props.body.getBatchJobById?.batchJob) {
+		this.setState({ 
 
-			this.setState({
-				id: this.props.body.getBatchJobById.batchJob.id,
-				pageId: this.props.body.getBatchJobById.batchJob.pageSocial.id,
-				pageInternalId: this.props.body.getBatchJobById.batchJob.pageSocial.internalId,
-				pageName: this.props.body.getBatchJobById.batchJob.pageSocial.name,
-				publisherPlatformId: this.props.body.getBatchJobById.batchJob.pageSocial.publisherPlatform.idPublisherPlatform,
-				adActiveStatus: this.props.body.getBatchJobById.batchJob.adActiveStatus,
-				adReachedCountries: this.props.body.getBatchJobById.batchJob.adReachedCountries,
-				adType: this.props.body.getBatchJobById.batchJob.adType,
-				impressionCondition: this.props.body.getBatchJobById.batchJob.impressionCondition,
-				searchTerms: this.props.body.getBatchJobById.batchJob.searchTerms,
-				time: this.props.body.getBatchJobById.batchJob.time,
-			});
-		}
-    }
+			batchJob: {
+				...this.props.body.getBatchJobById?.batchJob,
+				numAds:	 this.props.body.getBatchJobById?.numAds,
+				adsList: this.props.body.getBatchJobById?.adsList
+			}
+		});
+	}
+
+  // componentDidMount() {
+		
+	// 	/* 
+	// 	 *	TODO
+	// 	 *	Call ENUMS
+	// 	 *	move into Controller
+	// 	 */
+		
+	// 	if (this.props.body.getBatchJobById?.batchJob) {
+
+	// 		this.setState({
+	// 			id: this.props.body.getBatchJobById.batchJob.id,
+	// 			pageId: this.props.body.getBatchJobById.batchJob.pageSocial.id,
+	// 			pageInternalId: this.props.body.getBatchJobById.batchJob.pageSocial.internalId,
+	// 			pageName: this.props.body.getBatchJobById.batchJob.pageSocial.name,
+	// 			publisherPlatformId: this.props.body.getBatchJobById.batchJob.pageSocial.publisherPlatform.idPublisherPlatform,
+	// 			adActiveStatus: this.props.body.getBatchJobById.batchJob.adActiveStatus,
+	// 			adReachedCountries: this.props.body.getBatchJobById.batchJob.adReachedCountries,
+	// 			adType: this.props.body.getBatchJobById.batchJob.adType,
+	// 			impressionCondition: this.props.body.getBatchJobById.batchJob.impressionCondition,
+	// 			searchTerms: this.props.body.getBatchJobById.batchJob.searchTerms,
+	// 			time: this.props.body.getBatchJobById.batchJob.time,
+	// 		});
+	// 	}
+  // }
 	
-	onChangeInputText = (key: string, value: string): void => {
+	// onChangeInputText = (key: string, value: string): void => {
 
-		switch (key) {
+	// 	switch (key) {
 
-			case "page-id": {
+	// 		case "page-id": {
 
-				this.setState({pageInternalId: value});
-				break;
-			}
-			case "search-terms": {
+	// 			this.setState({pageInternalId: value});
+	// 			break;
+	// 		}
+	// 		case "search-terms": {
 
-				this.setState({searchTerms: value});
-				break;
-			}
-		}
-	}
+	// 			this.setState({searchTerms: value});
+	// 			break;
+	// 		}
+	// 	}
+	// }
 
-	onChangeSelect = (key: string, value: string): void => {
+	// onChangeSelect = (key: string, value: string): void => {
 		
-		switch (key) {
+	// 	switch (key) {
 
-			case "publisher-platform": {
+	// 		case "publisher-platform": {
 
-				this.setState({publisherPlatformId: +value});
-				break;
-			}
-			case "ad-active-status": {
+	// 			this.setState({publisherPlatformId: +value});
+	// 			break;
+	// 		}
+	// 		case "ad-active-status": {
 
-				this.setState({adActiveStatus: +value});
-				break;
-			}
-			case "ad-reached-countries": {
+	// 			this.setState({adActiveStatus: +value});
+	// 			break;
+	// 		}
+	// 		case "ad-reached-countries": {
 
-				this.setState({adReachedCountries: +value});
-				break;
-			}
-			case "ad-type": {
+	// 			this.setState({adReachedCountries: +value});
+	// 			break;
+	// 		}
+	// 		case "ad-type": {
 
-				this.setState({adType: +value});
-				break;
-			}
-			case "impression-condition": {
+	// 			this.setState({adType: +value});
+	// 			break;
+	// 		}
+	// 		case "impression-condition": {
 
-				this.setState({impressionCondition: +value});
-				break;
-			}
-			case "time": {
+	// 			this.setState({impressionCondition: +value});
+	// 			break;
+	// 		}
+	// 		case "time": {
 
-				this.setState({time: value});
-				break;
-			}
-		}
-	}
+	// 			this.setState({time: value});
+	// 			break;
+	// 		}
+	// 	}
+	// }
 
 	/* 
 	 *	TODO
@@ -199,16 +217,16 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 		 */
 		let graphlQuery;
 		let data = {
-			id: +this.state.id,
-			pageId: +this.state.pageId,
-			pageInternalId: this.state.pageInternalId,
-			publisherPlatformId: +this.state.publisherPlatformId,
-			adActiveStatus: +this.state.adActiveStatus,
-			adReachedCountries: +this.state.adReachedCountries,
-			adType: +this.state.adType,
-			impressionCondition: +this.state.impressionCondition,
-			searchTerms: this.state.searchTerms,
-			time: this.state.time,
+			id: 									this.state.batchJob.id,
+			pageId: 							this.state.batchJob.pageSocial.id,
+			pageInternalId: 			this.state.batchJob.pageSocial.internalId,
+			publisherPlatformId: 	this.state.batchJob.pageSocial.publisherPlatform.idPublisherPlatform,
+			adActiveStatus: 			this.state.batchJob.adActiveStatus,
+			adReachedCountries: 	this.state.batchJob.adReachedCountries,
+			adType: 							this.state.batchJob.adType,
+			impressionCondition: 	this.state.batchJob.impressionCondition,
+			searchTerms: 					this.state.batchJob.searchTerms,
+			time: 								this.state.batchJob.time,
 		};
 
 		if (this.props.match.params.type === pageTypes[0])
@@ -237,30 +255,29 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 
 		event.preventDefault();
 
-		if (!this.state.publisherPlatformId && this.state.publisherPlatformId !== 0) {
-			alert("Please, select publisher_platofrm");
-			return false;
-		}
+		const check = (value: number, message: string): boolean => {
 
-		if (!this.state.adActiveStatus && this.state.adActiveStatus !== 0) {
-			alert("Please, select ad_active_status");
-			return false;
-		}
+			if (!value && value !== 0) {
+				alert(message);
+				return false;
+			}
+			return true;
+		};
 
-		if (!this.state.adReachedCountries && this.state.adReachedCountries !== 0) {
-			alert("Please, select ad_reached_countries");
+		if (!check(this.state.batchJob.pageSocial.publisherPlatform.idPublisherPlatform, "Please, select publisher_platofrm"))
 			return false;
-		}
+
+		if (!check(this.state.batchJob.adActiveStatus, "Please, select ad_active_status"))
+			return false;
+
+		if (!check(this.state.batchJob.adReachedCountries, "Please, select ad_reached_countries"))
+			return false;
 		
-		if (!this.state.adType && this.state.adType !== 0) {
-			alert("Please, select ad_type");
+		if (!check(this.state.batchJob.adType, "Please, select ad_type"))
 			return false;
-		}
 		
-		if (!this.state.impressionCondition && this.state.impressionCondition !== 0) {
-			alert("Please, select impression_condition");
+		if (!check(this.state.batchJob.impressionCondition, "Please, select impression_condition"))
 			return false;
-		}
 
 		// if (!this.state.time) {
 		// 	alert("Please, select time");
@@ -318,8 +335,8 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 											<div className="text-center input-text">
 												<input 
 													type="text" 
-													value={this.state.pageInternalId} 
-													onChange={(e) => this.onChangeInputText("page-id", e.target.value)}
+													value={ this.state.batchJob.pageSocial.internalId }  
+													onChange={(e) => this.setState({batchJob: {...this.state.batchJob, pageSocial: {...this.state.batchJob.pageSocial, id: +e.target.value} } }) }
 												/>
 											</div>
 										</div>
@@ -328,7 +345,7 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 											<div className="text-center input-text">
 												<input 
 													type="text" 
-													value={ this.state.pageName } 
+													value={ this.state.batchJob.pageSocial.name } 
 													readOnly
 												/>
 											</div>
@@ -344,12 +361,28 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 											*/}
 											<div className="label">publisher_platform</div>
 											<div className="select">
-												<select onChange={(e) => this.onChangeSelect("publisher-platform", e.target.value)}>
+												<select 
+													// onChange={(e) => this.onChangeSelect("publisher-platform", e.target.value)}
+													onChange={
+														(e) => this.setState(
+															{batchJob: {
+																...this.state.batchJob, 
+																pageSocial: {
+																	...this.state.batchJob.pageSocial, 
+																	publisherPlatform: {
+																		...this.state.batchJob.pageSocial.publisherPlatform,
+																		idPublisherPlatform: +e.target.value
+																	}
+																} 
+															} 
+														}) 
+													}
+												>
 													<option value="" selected>--</option>
 													{
 														this.props.body.getPublisherPlatformList.publisherPlatformList.map((item) => { 	
 			
-															if (item.idPublisherPlatform == this.state.publisherPlatformId)
+															if (item.idPublisherPlatform == this.state.batchJob.pageSocial.publisherPlatform.idPublisherPlatform)
 																return <option value={item.idPublisherPlatform} selected>{item.valuePublisherPlatform}</option>; 
 																
 															return <option value={item.idPublisherPlatform}>{item.valuePublisherPlatform}</option>; 
@@ -373,12 +406,24 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 										*/}
 										<div className="label">ad_active_status</div>
 										<div className="select">
-											<select onChange={(e) => this.onChangeSelect("ad-active-status", e.target.value)}>
+											<select 
+												// onChange={(e) => this.onChangeSelect("ad-active-status", e.target.value)}
+												onChange={
+													(e) => {
+														this.setState({
+															batchJob: {
+																...this.state.batchJob,
+																adActiveStatus: +e.target.value
+															}
+														})
+													}
+												}
+											>
 												<option value="" selected>--</option>
 												{
 													this.props.body.getActiveStatusList.activeStatusList.map((item) => { 
 		
-														if (item.idActiveStatus == this.state.adActiveStatus)
+														if (item.idActiveStatus == this.state.batchJob.adActiveStatus)
 															return <option value={item.idActiveStatus} selected>{item.valueActiveStatus}</option>; 
 															
 														return <option value={item.idActiveStatus}>{item.valueActiveStatus}</option>; 
@@ -399,12 +444,24 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 										*/}
 										<div className="label">ad_reached_countries</div>
 										<div className="select">
-											<select onChange={(e) => this.onChangeSelect("ad-reached-countries", e.target.value)}>
+											<select 
+												// onChange={(e) => this.onChangeSelect("ad-reached-countries", e.target.value)}
+												onChange={
+													(e) => {
+														this.setState({
+															batchJob: {
+																...this.state.batchJob,
+																adReachedCountries: +e.target.value
+															}
+														})
+													}
+												}
+											>
 												<option value="" selected>--</option>
 												{
 													this.props.body.getReachedCountriesList.reachedCountriesList.map((item) => { 
 		
-														if (item.idReachedCountries == this.state.adReachedCountries)
+														if (item.idReachedCountries == this.state.batchJob.adReachedCountries)
 															return <option value={item.idReachedCountries} selected>{item.valueReachedCountries}</option>; 
 
 														return <option value={item.idReachedCountries}>{item.valueReachedCountries}</option>; 
@@ -427,12 +484,24 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 										*/}
 										<div className="label">ad_type</div>
 										<div className="select">
-											<select onChange={(e) => this.onChangeSelect("ad-type", e.target.value)}>
+											<select 
+												// onChange={(e) => this.onChangeSelect("ad-type", e.target.value)}
+												onChange={
+													(e) => {
+														this.setState({
+															batchJob: {
+																...this.state.batchJob,
+																adType: +e.target.value
+															}
+														})
+													}
+												}
+											>
 												<option value="" selected>--</option>
 											{
 												this.props.body.getTypeList.typeList.map((item) => { 
 	
-													if (item.idType == this.state.adType)
+													if (item.idType == this.state.batchJob.adType)
 														return <option value={item.idType} selected>{item.valueType}</option>; 
 
 													return <option value={item.idType}>{item.valueType}</option>; 
@@ -456,12 +525,24 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 										*/}
 										<div className="label">impression_condition</div>
 										<div className="select">
-											<select onChange={(e) => this.onChangeSelect("impression-condition", e.target.value)}>
+											<select 
+												// onChange={(e) => this.onChangeSelect("impression-condition", e.target.value)}
+												onChange={
+													(e) => {
+														this.setState({
+															batchJob: {
+																...this.state.batchJob,
+																impressionCondition: +e.target.value
+															}
+														})
+													}
+												}
+											>
 												<option value="" selected>--</option>
 											{
 												this.props.body.getImpressionConditionList.impressionConditionList.map((item) => { 
 	
-													if (item.idImpressionCondition == this.state.impressionCondition)
+													if (item.idImpressionCondition == this.state.batchJob.impressionCondition)
 														return <option value={item.idImpressionCondition} selected>{item.valueImpressionCondition}</option>; 
 
 													return <option value={item.idImpressionCondition}>{item.valueImpressionCondition}</option>; 
@@ -514,8 +595,18 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 												type="text"
 												className="text-center"
 												placeholder="es1, es2, ..., esN"
-												value={this.state.searchTerms}
-												onChange={(e) => this.onChangeInputText("search-terms", e.target.value)}
+												value={ this.state.batchJob.searchTerms }
+												// onChange={(e) => this.onChangeInputText("search-terms", e.target.value)}
+												onChange={
+													(e) => {
+														this.setState({
+															batchJob: {
+																...this.state.batchJob,
+																searchTerms: e.target.value
+															}
+														})
+													}
+												}
 											/>
 										</div>
 									</div>
@@ -525,9 +616,16 @@ class BatchJobContent extends React.PureComponent<BatchJobContentProps, BatchJob
 								</section>
 							</form>
 						</section>
+						<section>
+							<AdsListTable 
+								adsList={ this.state.batchJob.adsList }
+							/>
+						</section>
 					</div>
 				</div>
 			</Fragment>
-        );
-    }
+    );
+  }
 }
+
+export default BatchJob;

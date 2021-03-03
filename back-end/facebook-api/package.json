@@ -2,10 +2,10 @@
   "name": "fbads-fbapi-social",
   "version": "1.0.0",
   "description": "Facebook API - Nodejs",
-  "main": "./bin/www",
+  "main": "./src/app.js",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./src/app.js",
     "start_nodemon": "npm i; npm update; nodemon ./bin/www"
   },
   "author": "Valerio Giocondi",
@@ -16,20 +16,20 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
-    "crypto-random-string": "^3.3.0",
+    "crypto-random-string": "^3.3.1",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
-    "mongoose": "^5.11.5",
+    "mongoose": "^5.11.16",
     "morgan": "~1.9.1",
     "mysql2": "^2.2.1",
     "redux": "^4.0.5",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.5.0"
   },
   "devDependencies": {
-    "@types/node": "^13.13.35",
+    "@types/node": "^13.13.42",
     "nodemon": "^2.0.6",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.9"
   }
 }

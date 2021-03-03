@@ -1,6 +1,9 @@
 const AdsUseCase = require('../application/use_cases/AdsUseCase');
-const AdsDTOMapperRequest = require('../entities/request/mappers/AdsRequestMapper');
-const AdsDTOMapperResponse = require('../entities/response/mappers/AdsResponseMapper');
+const AdsMapperRequest = require('../entities/request/mappers/AdsRequestMapper');
+const AdsMapperResponse = require('../entities/response/mappers/AdsResponseMapper');
+const AdsCountRequestMapper = require('../entities/request/mappers/AdsCountRequestMapper');
+const AdsCountResponseMapper = require('../entities/response/mappers/AdsCountResponseMapper');
+const AdsSaveRequestMapper = require('../entities/request/mappers/AdsSaveRequestMapper');
 
 class AdsController {
 
@@ -12,7 +15,7 @@ class AdsController {
 
         return AdsUseCase.getAll().then((responseBO) => {
 
-            return AdsDTOMapperResponse.toDTO(responseBO);
+            return AdsMapperResponse.toDTO(responseBO);
 
         }, (err) => {
             
@@ -22,11 +25,11 @@ class AdsController {
 
     async getById(requestDTO) {
 
-        let requestBO = AdsDTOMapperRequest.toBO(requestDTO);
+        let requestBO = AdsMapperRequest.toBO(requestDTO);
         
         return AdsUseCase.getById(requestBO).then((responseBO) => {
 
-            return AdsDTOMapperResponse.toDTO(responseBO);
+            return AdsMapperResponse.toDTO(responseBO);
 
         }, (err) => {
             
@@ -36,11 +39,11 @@ class AdsController {
 
     async getAdsBySocialPageId(requestDTO) {
         
-        let requestBO = AdsDTOMapperRequest.toBO(requestDTO);
+        let requestBO = AdsMapperRequest.toBO(requestDTO);
 
         return AdsUseCase.getAdsBySocialPageId(requestBO).then((responseBO) => {
 
-            return AdsDTOMapperResponse.toDTO(responseBO);
+            return AdsMapperResponse.toDTO(responseBO);
 
         }, (err) => {
             
@@ -50,11 +53,53 @@ class AdsController {
     
     async getAdsByJobId(requestDTO) {
         
-        let requestBO = AdsDTOMapperRequest.toBO(requestDTO);
+        let requestBO = AdsMapperRequest.toBO(requestDTO);
         
         return AdsUseCase.getAdsByJobId(requestBO).then((responseBO) => {
             
-            return AdsDTOMapperResponse.toDTO(responseBO);
+            return AdsMapperResponse.toDTO(responseBO);
+
+        }, (err) => {
+            
+            throw err;
+        });
+    }
+
+    async countAdsByJobId(requestDTO) {
+        
+        let requestBO = AdsCountRequestMapper.toBO(requestDTO);
+        
+        return AdsUseCase.countAdsByJobId(requestBO).then((responseBO) => {
+
+            return AdsCountResponseMapper.toDTO(responseBO);
+
+        }, (err) => {
+            
+            throw err;
+        });
+    }
+
+    async getAdsByJobExecutedId(requestDTO) {
+
+        let requestBO = AdsMapperRequest.toBO(requestDTO);
+                
+        return AdsUseCase.getAdsByJobExecutedId(requestBO).then((responseBO) => {
+        
+            return AdsMapperResponse.toDTO(responseBO);
+
+        }, (err) => {
+            
+            throw err;
+        });
+    }
+
+    async countAdsByJobExecutedId(requestDTO) {
+        
+        let requestBO = AdsCountRequestMapper.toBO(requestDTO);
+        
+        return AdsUseCase.countAdsByJobExecutedId(requestBO).then((responseBO) => {
+
+            return AdsCountResponseMapper.toDTO(responseBO);
 
         }, (err) => {
             
@@ -80,11 +125,11 @@ class AdsController {
 
     async saveAds(requestDTO) {
 
-        let requestBO = AdsDTOMapperRequest.toBO(requestDTO);
+        let requestBO = AdsSaveRequestMapper.toBO(requestDTO);
         
         return AdsUseCase.saveAds(requestBO).then((responseBO) => {
 
-            return AdsDTOMapperResponse.toDTO(responseBO);
+            return AdsMapperResponse.toDTO(responseBO);
 
         }, (err) => {
            

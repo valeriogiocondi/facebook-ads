@@ -23,6 +23,7 @@ export default graphql`
                 impressionCondition
                 searchTerms
                 time
+                numAds
                 created
             }
         }

@@ -11,8 +11,11 @@ class Database {
         username: process.env.DB_MYSQL_USER,
         password: process.env.DB_MYSQL_PASS,
         host: process.env.DB_MYSQL_HOST,
-        port: "",
+        port: process.env.DB_MYSQL_PORT,
         dialect: "mysql",
+        dialectOptions: {
+            socketPath: "/var/run/mysqld/mysqld.sock"
+        },
         instance: null,
     };
     this.mongoDB = {
@@ -25,10 +28,17 @@ class Database {
     };
 
     // SEQUELIZE
-    this.sequelize.instance = new Sequelize(this.sequelize.database, this.sequelize.username, this.sequelize.password, {
-      host: this.sequelize.host,
-      dialect: this.sequelize.dialect
-    });
+    this.sequelize.instance = 
+      new Sequelize(
+        this.sequelize.database, 
+        this.sequelize.username, 
+        this.sequelize.password, 
+        {
+          host: this.sequelize.host,
+          port: this.sequelize.port,
+          dialect: this.sequelize.dialect
+        }
+      );
 
     // MONGOOSE
     let urlMongo = ""; 
@@ -53,26 +63,70 @@ class Database {
   }
   
   init() {
+
+    // SEQUELIZE
+    const sequelizeConnection = async (instance) => {
+
+      let connectionInterval = null;
+      const connect = (instance, interval) => {
+
+        console.log("Sequelize connecting...");
+  
+        try {
+
+          instance
+            .authenticate()
+            .then(() => {
+              clearInterval(interval);
+              console.log('Sequelize: Connection has been established successfully.');
+            })
+            .catch(err => {
+                console.error('Sequelize: Unable to connect to the database:', err);
+            });
+
+        } catch (e) {
+          
+          console.error(e);
+        }
+      };
+      
+      connectionInterval = setInterval(async () => { connect(instance, connectionInterval) }, 5000);
+    };
+
+    // MONGOOSE
+    const mongooseConnection = async (instance) => {
+
+      const connect = (instance, interval) => {
+
+        console.log("Mongoose connecting...");
+  
+        try {
+
+          //Bind connection to error event (to get notification of connection errors)
+          instance.on('error', () => {
+            console.error.bind(console, 'Mongoose connection error:')
+          });
+      
+          instance.on('connected', () => {  
+      
+            console.log('Mongoose default connection opento $urlMongo');
+          }); 
+
+        } catch (e) {
+          
+          console.error(e);
+          console.error("Mongoose try new attempt");
+        }
+      };
+      
+      await connect(instance);
+    };
   
     // SEQUELIZE
-    this.sequelize.instance
-        .authenticate()
-        .then(() => {
-            console.log('MongoDB: Connection has been established successfully.');
-        })
-        .catch(err => {
-            console.error('MongoDB: Unable to connect to the database:', err);
-        });
+    // sequelizeConnection(this.sequelize.instance);
         
     // MONGOOSE
-    //Bind connection to error event (to get notification of connection errors)
-    this.mongoDB.instance.on('error', () => {
-      console.error.bind(console, 'Mongoose connection error:')
-    });
-
-    this.mongoDB.instance.on('connected', () => {  
-        console.log('Mongoose default connection open to $urlMongo');
-    }); 
+    mongooseConnection(this.mongoDB.instance);
   }
 }
   

@@ -20,6 +20,7 @@ import Ads from './_view/pages/ads/Ads';
 import BatchJobList from './_view/pages/batch-job-list/BatchJobList';
 import BatchJobExecutedList from './_view/pages/batch-jobs-executed-list/BatchJobsExecutedList';
 import BatchJob from './_view/pages/batch-job/BatchJob';
+import BatchJobExecuted from './_view/pages/batch-job-executed/BatchJobExecuted';
 import PageSocialList from './_view/pages/page-social-list/PageSocialList';
 import PageSocial from './_view/pages/page-social/PageSocial';
 import Login from './_view/pages/login/Login';
@@ -38,6 +39,7 @@ const Index = ({ store }) => (
         <Route exact path="/batch-job-list/" component={ BatchJobList } />
         <Route exact path="/batch-job/:type/:id" component={ BatchJob } />
         <Route exact path="/batch-job-executed-list/" component={ BatchJobExecutedList } />
+        <Route exact path="/batch-job-executed/:id" component={ BatchJobExecuted } />
         <Route exact path="/ads/:id" component={ Ads } />
         <Route component={ Page404 } />
       </Switch>

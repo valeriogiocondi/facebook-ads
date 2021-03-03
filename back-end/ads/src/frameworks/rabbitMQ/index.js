@@ -19,54 +19,69 @@ class Rabbit {
 
   async init() {
 
-    console.log("Rabbit connecting...");
-    
-    await amqp.connect(process.env.RABBITMQ_URL)
-      .then(async (connection) => {
-        
-        console.log("Rabbit connected");
-  
-        await connection.createChannel()
-          .then(async (channel) => {
-          
-            console.log("Rabbit channel created");
-            this.instance.channel = channel;
-    
-            await channel.assertExchange(this.instance.exchange, "topic", {durable: true})
-              .then((ex) => {
-    
-                // SAVE Rabbit instance to REDUX
-                redux.dispatch(reduxActions.saveRedditObj(this.instance));
+    const connect = async () => {
 
-                // console.log("Exchange: " + JSON.stringify(ex));
-      
-                channel.assertQueue(this.instance.queue, {durable: true})
-                  .then((q) => {
-      
-                    // console.log("Waiting for messages in " + JSON.stringify(q));
+      console.log("Rabbit connecting...");
+
+      return new Promise( async (resolve, reject) => {
         
-                    try {  
-                      /* 
-                      *  Binding exchange to queue
-                      *  Routing messages with $routingKey, from $exchange to $queue
-                      *
-                      */
-                      channel.bindQueue(q.queue, this.instance.exchange, this.instance.routingKey);
-      
-                    } catch (err) {
-      
-                      console.error(err);
-                    }
-                  });
+        var attempt = setInterval(async () => {
+
+          await amqp.connect(process.env.RABBITMQ_URL)
+            .then(async (connection) => { 
               
-              });
+              console.log("Rabbit connected");
+              clearInterval(attempt);
+        
+              await connection.createChannel()
+                .then(async (channel) => {
+                
+                  console.log("Rabbit channel created");
+                  this.instance.channel = channel;
+          
+                  await channel.assertExchange(this.instance.exchange, "topic", {durable: true})
+                    .then((ex) => {
+          
+                      // SAVE Rabbit instance to REDUX
+                      redux.dispatch(reduxActions.saveRedditObj(this.instance));
+      
+                      channel.assertQueue(this.instance.queue, {durable: true})
+                        .then((q) => {
+              
+                          try {  
+                            /* 
+                            *  Binding exchange to queue
+                            *  Routing messages with $routingKey, from $exchange to $queue
+                            *
+                            */
+                            channel.bindQueue(q.queue, this.instance.exchange, this.instance.routingKey);
+            
+                          } catch (err) {
+            
+                            console.error(err);
+                          }
+                        });
+                    
+                    });
+                    resolve();
+      
+                })
+                .catch(err => console.error(err));
+      
+            })
+            .catch(err => {
+            
+              console.error(err);
+              console.log("Try with a new attempt");
+            });
 
-          })
-          .catch(err => console.error(err));
+        }, 5000);
 
-      })
-      .catch(err => console.error(err));
-  
+      });
+      
+    };
+
+    await connect();
   }
 
   getInstance() {

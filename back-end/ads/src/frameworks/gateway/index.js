@@ -3,6 +3,8 @@ const redux = require('../redux');
 const RabbitMQ_layer = require('../rabbitMQ');
 const AdsController = require('../../controller/AdsController');
 const AdsRequestDTO = require('../../entities/request/dto/AdsRequestDTO');
+const AdsCountRequestDTO = require('../../entities/request/dto/AdsCountRequestDTO');
+const AdsSaveRequestDTO = require('../../entities/request/dto/AdsSaveRequestDTO');
 
 module.exports = async (app) => {
 
@@ -135,11 +137,9 @@ module.exports = async (app) => {
 
                     new Promise((resolve, reject) => {
 
-                        // TODO
-                        // requestDTO
                         let requestDTO = msgRequestContent.payload.map((item) => {
                             
-                            return new AdsRequestDTO({
+                            return new AdsSaveRequestDTO({
 
                                 _id: item._id,
                                 id: item.id,
@@ -160,6 +160,7 @@ module.exports = async (app) => {
                                 regionDistribution: item.region_distribution,
                                 spend: item.spend,
                                 batchJobId: item.batch_job_id,
+                                batchJobExecutedId: item.batch_job_executed_id,
                                 created: item.created,
                             });
                         })
@@ -202,8 +203,66 @@ module.exports = async (app) => {
 
                     new Promise((resolve, reject) => {
 
-                        let requestDTO = new AdsRequestDTO({ batchJobId: msgRequestContent.payload.batchJobId });
+                        let requestDTO = new AdsRequestDTO(msgRequestContent.payload);
+
                         AdsController.getAdsByJobId(requestDTO).then((responseDTO) => {
+
+                            if (msgRequestContent.replyTo) {
+
+                                RabbitMQ_layer.replyTo(msgRequestContent.replyTo, { id: msgRequestContent.id, body: responseDTO });
+                                return;
+                            }
+                            RabbitMQ_layer.replyTo("api_gateway_response", { id: msgRequestContent.id, body: responseDTO });
+                            
+                        });
+                        resolve();
+                    });
+                    break;
+                }
+                case "ads.count.by-batch-job-id": {
+
+                    new Promise((resolve, reject) => {
+
+                        let requestDTO = new AdsCountRequestDTO(msgRequestContent.payload);
+                        AdsController.countAdsByJobId(requestDTO).then((responseDTO) => {
+
+                            if (msgRequestContent.replyTo) {
+
+                                RabbitMQ_layer.replyTo(msgRequestContent.replyTo, { id: msgRequestContent.id, body: responseDTO });
+                                return;
+                            }
+                            RabbitMQ_layer.replyTo("api_gateway_response", { id: msgRequestContent.id, body: responseDTO });
+                            
+                        });
+                        resolve();
+                    });
+                    break;
+                }
+                case "ads.by-batch-job-executed-id": {
+
+                    new Promise((resolve, reject) => {
+
+                        let requestDTO = new AdsRequestDTO(msgRequestContent.payload);
+                        AdsController.getAdsByJobExecutedId(requestDTO).then((responseDTO) => {
+
+                            if (msgRequestContent.replyTo) {
+
+                                RabbitMQ_layer.replyTo(msgRequestContent.replyTo, { id: msgRequestContent.id, body: responseDTO });
+                                return;
+                            }
+                            RabbitMQ_layer.replyTo("api_gateway_response", { id: msgRequestContent.id, body: responseDTO });
+                            
+                        });
+                        resolve();
+                    });
+                    break;
+                }
+                case "ads.count.by-batch-job-executed-id": {
+
+                    new Promise((resolve, reject) => {
+
+                        let requestDTO = new AdsCountRequestDTO({ batchJobExecutedIdList: msgRequestContent.payload.batchJobExecutedIdList });
+                        AdsController.countAdsByJobExecutedId(requestDTO).then((responseDTO) => {
 
                             if (msgRequestContent.replyTo) {
 

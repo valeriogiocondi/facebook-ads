@@ -57,6 +57,21 @@ module.exports = async (app) => {
         res.send(JSON.stringify(response));
     });
 
+    app.get('/batch-job/ads/:id/page/:page/limit/:limit/', async (req, res) => {
+    
+        let requestDTO = new BatchJobRequestDTO(req.params);
+        let response = await BatchJobController.getAdsByJobId(requestDTO).then((responseDTO) => {
+
+            return responseDTO;
+
+        }).catch((err) => { 
+
+            console.error(err); 
+        });
+        
+        res.send(JSON.stringify(response));
+    });
+
     app.get('/batch-job/ads/:pageInternalId/export-csv/', async (req, res) => {
     
         let requestDTO = new BatchJobRequestDTO(req.params);
@@ -130,13 +145,43 @@ module.exports = async (app) => {
             console.error(err); 
         });
         
-        res.send(JSON.stringify(response));
+        // res.send(JSON.stringify(response));
     });
     
-    app.get('/batch-job-executed/:id', async (req, res) => {
+    app.get('/batch-job-executed/:id/', async (req, res) => {
+    
+        let requestDTO = new BatchJobExecutedRequestDTO({ id: req.params.id });
+        let response = await BatchJobExecutedController.getById(requestDTO).then((responseDTO) => {
+
+            return responseDTO;
+
+        }).catch((err) => { 
+
+            console.error(err); 
+        });
+        
+        res.send(JSON.stringify(response));
+    });
+
+    app.get('/batch-job-executed/ads/:id/page/:page/limit/:limit/', async (req, res) => {
+    
+        let requestDTO = new BatchJobExecutedRequestDTO(req.params);
+        let response = await BatchJobExecutedController.getAdsByJobExecutedId(requestDTO).then((responseDTO) => {
+
+            return responseDTO;
+
+        }).catch((err) => { 
+
+            console.error(err); 
+        });
+        
+        res.send(JSON.stringify(response));
+    });
+
+    app.get('/batch-job-executed/by-batch-job/:id', async (req, res) => {
     
         let requestDTO = new BatchJobExecutedRequestDTO({ batchJobId: req.params.id });
-        let response = await BatchJobExecutedController.getByJobId(requestDTO).then((responseDTO) => {
+        let response = await BatchJobExecutedController.getByBatchJobId(requestDTO).then((responseDTO) => {
 
             return responseDTO;
 

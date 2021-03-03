@@ -176,6 +176,27 @@ const gateway = (app) => {
                     });
                     break;
                 }
+                case "page-social.update": {
+
+                    // new Promise((resolve, reject) => {
+                        
+                    //     let requestDTO = new PageSocialRequestDTO({ 
+                    //         pageInternalId: msgRequestContent.payload.pageInternalId,
+                    //         pageName: msgRequestContent.payload.pageName,
+                    //         publisherPlatformId: msgRequestContent.payload.publisherPlatformId,
+                    //     });
+                    //     PageSocialController.insert(requestDTO).then((responseDTO) => {
+
+                    //         let queue = (msgRequestContent.replyTo) ? msgRequestContent.replyTo : "api_gateway_response";
+
+                    //         RabbitMQ_layer.replyTo(queue, { id: msgRequestContent.id, body: responseDTO });
+
+                    //     }).catch((err) => { console.error(err) });
+                        
+                    //     resolve();
+                    // });
+                    break;
+                }
                 default: {
                     
                     break;

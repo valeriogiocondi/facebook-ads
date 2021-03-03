@@ -40,11 +40,17 @@ class serviceREST {
             if (options.body)
                 requestHTTP.write(options.body);
 
-            requestHTTP.on("error", (err) => {
-                
-                console.error(err)
-                throw err;
-            });
+            // try {
+                requestHTTP.on("error", (err) => {
+                    
+                    console.error(err)
+                    // throw err;
+                });
+
+            // } catch(e) {
+
+            //     console.error("Connection refused!")
+            // }
             requestHTTP.end();
         });
     };

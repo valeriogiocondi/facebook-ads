@@ -1,17 +1,90 @@
 @import "../../../static/style/Reset.less";
 
+
+/* 
+ *  VARS
+ *  
+ */
+@widthToggleButton: 50px;
+
+
+/* 
+ *  RULES
+ *  
+ */
+
+.dark {
+
+  #menu {
+
+    background-color: @darkThemeForeground;
+      
+    ul {
+        
+      li {
+        * {
+          color: #FFF
+        }
+      }
+    }
+  }
+
+  #toggle-button {
+
+    ul {
+      margin-left: -@widthToggleButton;
+    }
+  }
+}
+
 #menu {
 
-  padding: 20px 20px 0px 0px;
+  padding: 15px 0px;
       
   ul {
-      
+    margin: 0px;
+
     li {
-      margin-right: 10px;
+      margin-left: 20px;
       display: inline;
 
       .icon * {
           font-size: 20px;
+      }
+    }
+  }
+}
+
+#toggle-button {
+
+  width: @widthToggleButton;
+  padding: 0px;
+  margin-top: 2px;
+  box-sizing: content-box;
+  overflow: hidden;
+
+  ul {
+    width: @widthToggleButton;
+    padding: 0px;
+    display: flex;
+    
+    li {
+      width: @widthToggleButton;
+      margin: 0px;
+
+      &:nth-child(1) {
+        background-color: #CCC;
+      }
+      &:nth-child(2) {
+        background-color: @darkThemeTheMost;
+      }
+
+      div {
+        width: @widthToggleButton;
+        padding: 2px 0px;
+        font-size: 12px;
+        text-align: center;
+        text-transform: uppercase;
       }
     }
   }

@@ -1,4 +1,5 @@
 const { gql } = require('apollo-server')
+// const schemaGraphql = require('./schemaGraphql.graphql')
 
 const typeDefs = gql`
 type Query {
@@ -6,14 +7,16 @@ type Query {
     adsById(id: ID!): Ads
     adsBySocialPageId(pageSocialInternalId: String!): PageSocialResponseDTO
     adsByBatchJobId(batchJobId: ID!): [Ads]
+    adsByBatchJobExecutedId(batchJobEcecutedId: ID!, limit: Int, page: Int): [Ads]
 
     exportCsvAdsBySocialPageId(authToken: String, pageInternalId: String!): ExportCsvResponseDTO!
     exportCsvAdsByBatchJobId(authToken: String, batchJobId: ID!): ExportCsvResponseDTO!
 
     getBatchJobList(authToken: String!, limit: Int, page: Int): BatchJobListResponse
-    getBatchJobById(authToken: String, params: BatchJobInput!): BatchJobResponse
+    getBatchJobById(authToken: String, id: ID!): BatchJobResponse
     
     getBatchJobExecutedList(authToken: String!, limit: Int, page: Int): BatchJobExecutedListResponse
+    getBatchJobExecutedById(authToken: String, id: ID!): BatchJobExecutedResponse
 
     getActiveStatusList(authToken: String!): ActiveStatusResponse
     getReachedCountriesList(authToken: String!): ReachedCountriesResponse
@@ -22,8 +25,7 @@ type Query {
     getPublisherPlatformList(authToken: String!): PublisherPlatformResponse
 
     getPageSocialList(authToken: String!, limit: Int, page: Int): PageSocialListResponse
-    getPageSocial(authToken: String!, id: ID!): PageSocialResponse
-    getAdsBySocialPageId(authToken: String!, id: ID!, internalID: ID!): PageSocialAdsResponse
+    getPageSocial(authToken: String!, id: ID!, internalID: ID!, limit: Int, page: Int): PageSocialResponse
 
     loginAuth(username: String!, password: String!): String
     loginVerify(token: String!): String
@@ -34,6 +36,7 @@ type Mutation {
     insertBatchJob(params: BatchJobInput!): BatchJob
     editBatchJob(params: BatchJobInput!): BatchJob
     deleteBatchJob(params: BatchJobInput!): BatchJob
+    getBatchJobExecutedList(authToken: String!, limit: Int, page: Int): BatchJobExecutedListResponse
 }   
 
 
@@ -78,11 +81,8 @@ type PageSocialListResponse implements Response {
 type PageSocialResponse implements Response {
     token: String!
     pageSocial: PageSocial!
-}
-type PageSocialAdsResponse implements Response {
-    token: String!
-    pageSocial: PageSocial!
-    ads: [Ads]!
+    numAds: Int
+    adsList: [Ads]
 }
 type BatchJobListResponse implements Response {
     token: String!
@@ -91,10 +91,16 @@ type BatchJobListResponse implements Response {
 type BatchJobResponse implements Response {
     token: String!
     batchJob: BatchJob!
+    adsList: [Ads]
 }
 type BatchJobExecutedListResponse implements Response {
     token: String!
     batchJobExecutedList: [BatchJobExecuted]!
+}
+type BatchJobExecutedResponse implements Response {
+    token: String!
+    batchJobExecuted: BatchJobExecuted!
+    adsList: [Ads]
 }
 type AdsListResponse implements Response {
     token: String!
@@ -181,6 +187,7 @@ type BatchJob {
     adType: Int
     impressionCondition: Int    
     searchTerms: String
+    numAds: Int
     time: String
     created: String
 }
@@ -189,6 +196,7 @@ type BatchJobExecuted {
     pageSocial: PageSocial
     batchJob: BatchJob!
     byBatch: Int!
+    numAds: Int
     created: String
 }
 

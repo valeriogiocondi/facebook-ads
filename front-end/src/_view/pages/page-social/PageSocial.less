@@ -13,4 +13,27 @@
 
 #page-social {
 
+    & > header {
+        margin-bottom: 60px;
+        display: flex;
+        align-items: flex-start;
+
+        & > * {
+            margin-right: 50px;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            
+            .label {
+                margin-right: 5px;
+                font-size: 15px;
+                font-weight: 500;
+                text-transform: capitalize;
+            }
+            .value {
+                font-weight: 600;
+            }
+        }
+
+    }
 }

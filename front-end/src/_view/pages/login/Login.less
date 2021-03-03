@@ -1,60 +1,53 @@
 @import "../../../static/style/Reset.less";
 
-.container {
+#login {
+
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+
+    .image-intro {
+        width: 50%;
+        height: calc(100%);
+        background-color: #3B5998;
+        /* background-color: #822433; */
+    }
     
-    & > header {
-        padding: 10px 0px;
-    }
+    .form-wrapper {
+        width: 50%;
+        text-align: center;
+        box-sizing: border-box;
+        padding-top: 200px;
 
-    & > section {
-        padding: 10px 0px;
-    }
-}
-
-#ads {
-
-    .title {
-        margin-bottom: 10px;
-    }
-
-    section {
-        margin-bottom: 30px;
-
-        & > section {
-            margin-bottom: 10px;
+        header {
+            margin-bottom: 20px;
+            
+            .logo {
+                width: 200px;
+                overflow: hidden;
+            }
         }
 
-        .field {
-            .label {
-                width: 230px !important;
-                display: inline-block;
-            }
-            div {
-                display: inline-block;
+        .input-text {
+            
+            width: 300px;
+            margin-bottom: 20px;
+            
+            input {
+                text-align: center;
             }
         }
         
-        .platform {
-            text-transform: uppercase;
-        }
-    }
-
-    #photo {
-        height: 400px;
-        margin-right: 10px;
-        border: solid 7px #EEE;
-        /* outline: solid 2px #CCC; */
-        text-align: center;
-
-        p {
-            margin-top: 150px;
-            font-size: 30px;
-
-            a {
-                display: block;
-                font-size: 16px;
+        button {
+            width: 300px;
+            padding: 10px 0px;
+            background-color: #3B5998;
+            /* background-color: #822433; */
+            
+            &:hover {
+                
+                background-color: #2F477A;
             }
         }
     }
-
 }

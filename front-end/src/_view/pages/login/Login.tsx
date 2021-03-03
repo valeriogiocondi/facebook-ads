@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 // MODEL
@@ -15,7 +15,7 @@ import LoginService from '../../../services/LoginService';
 
 // STYLE
 import './Login.less';
-import { KeyboardBackspace } from '@material-ui/icons';
+import logo from '../../../static/images/FACEBOOK-ADS.png';
 
 
 type LoginState = {
@@ -69,30 +69,31 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
 	render() {
 		
 		return (
-			<Fragment>
+			<React.Fragment>
 				{ this.renderRedirect() }
-				<div id="login" className="container">
-					<header>
-						<a href="">
-							<KeyboardBackspace />
-						</a>
-						<h1>Login</h1>
-					</header>
-					<section>
-						<form onSubmit={this.login}>
-							<div>
-								<input type="text" placeholder="E-mail" onChange={this.setUsername} />
-							</div>
-							<div>
-								<input type="password" placeholder="Password" onChange={this.setPassword} />
-							</div>
-							<div>
-								<button type="submit" className="btn btn-primary"> Login </button>
-							</div>
-						</form>
-					</section>
+				<div id="login" className="">
+					<div className="image-intro left"></div>
+					<div className="form-wrapper right">
+						<header>
+							<img className="logo" src={ logo } alt="Logo Sapienza"/>
+							{/* <h1 className="title">Login</h1> */}
+						</header>
+						<section>
+							<form onSubmit={this.login}>
+								<div className="input-text">
+									<input type="text" placeholder="E-mail" onChange={this.setUsername} />
+								</div>
+								<div className="input-text">
+									<input type="password" placeholder="Password" onChange={this.setPassword} />
+								</div>
+								<div>
+									<button type="submit" className="btn btn-primary"> Login </button>
+								</div>
+							</form>
+						</section></div>
+					<div className="clearfix"></div>
 				</div>
-			</Fragment>
+			</React.Fragment>
     );
   }
 }

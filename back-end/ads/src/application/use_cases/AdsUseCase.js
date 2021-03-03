@@ -44,6 +44,45 @@ class Ads {
         return await AdsPersistence.getAdsByJobId(requestBO);
     }
 
+    async countAdsByJobId(requestBO) {
+        
+        if (!requestBO) {
+
+            throw new Error('Ads Use Case - Validation failed');
+        }
+        
+        //TODO
+        // search if Ads already exists
+        
+        return await AdsPersistence.countAdsByJobId(requestBO);
+    }
+    
+    async getAdsByJobExecutedId(requestBO) {
+        
+        if (!requestBO) {
+
+            throw new Error('Ads Use Case - Validation failed');
+        }
+        
+        //TODO
+        // search if Ads already exists
+        
+        return await AdsPersistence.getAdsByJobExecutedId(requestBO);
+    }
+
+    async countAdsByJobExecutedId(requestBO) {
+        
+        if (!requestBO) {
+
+            throw new Error('Ads Use Case - Validation failed');
+        }
+        
+        //TODO
+        // search if Ads already exists
+        
+        return await AdsPersistence.countAdsByJobExecutedId(requestBO);
+    }
+
     async checkAdsListExist(requestBO) {
         
         if (!requestBO) {

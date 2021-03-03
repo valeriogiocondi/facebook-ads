@@ -34,6 +34,7 @@ var adsSchema = new Schema({
       upper_bound: String,
   },
   batch_job_id: String,
+  batch_job_executed_id: String,
   created: { type: Date, default: Date.now },
 });
 

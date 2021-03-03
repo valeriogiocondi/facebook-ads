@@ -14,21 +14,13 @@ class BatchJobResponseDTOMapper {
 
                 let obj = {
                     id: bo.id,
-                    // pageSocial: {
-                    //     id: bo.page_social.id,
-                    //     name: bo.page_social.name,
-                    //     internalId: bo.page_social.internal_id,
-                    //     publisherPlatform: {
-                    //         idPublisherPlatform: bo.page_social.publisher_platform.id,
-                    //         valuePublisherPlatform: bo.page_social.publisher_platform.value,
-                    //     }
-                    // },
                     pageSocial: bo.page_social,
                     adActiveStatus: bo.ad_active_status,
                     adReachedCountries: bo.ad_reached_countries,
                     adType: bo.ad_type,
                     impressionCondition: bo.impression_condition,
                     searchTerms: bo.search_terms,
+                    numAds: bo.numAds,
                     time: bo.time,
                     created: bo.created,   
                 };
@@ -66,6 +58,7 @@ class BatchJobResponseDTOMapper {
                     ad_type: dto.adType,
                     impression_condition: dto.impressionCondition,
                     search_terms: dto.searchTerms,
+                    num_ads: dto.num_ads,
                     time: dto.time,
                     created: dto.created,
                 };

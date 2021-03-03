@@ -3,13 +3,13 @@ type actionType = {
   payload: never 
 };
 
-export default (state = [], action: actionType) => {
+export default (state = {}, action: actionType) => {
 
     switch (action.type) {
   
-      case 'STORE_PROJECTIONS': {
+      case 'STORE_THEME': {
 
-        return Object.assign([], action.payload);
+        return Object.assign({}, action.payload);
       }
   
       default:

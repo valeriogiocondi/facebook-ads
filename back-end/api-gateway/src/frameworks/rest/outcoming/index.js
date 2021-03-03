@@ -207,7 +207,28 @@ module.exports = {
       }
     },
 
-    getAdsByBatch: async (requestDTO) => {
+    getAdsByBatchJobId: async (requestDTO) => {
+
+      try {
+
+        var options = {
+          host: process.env.BATCH_JOB_HOST,
+          port: process.env.BATCH_JOB_PORT,
+          path: `/batch-job/ads/${requestDTO.id}/page/${requestDTO.page}/limit/${requestDTO.limit}/`,
+          method: 'GET',
+          headers: { 
+            'Content-Type': 'application/json', 
+          },
+        };
+        return await serviceREST.request(options).then(result => result);
+
+      } catch (error) {
+        
+        console.error(error)
+      }
+    },
+
+    getCsvAdsByBatch: async (requestDTO) => {
 
       try {
 
@@ -332,17 +353,59 @@ module.exports = {
       }
     },
 
-    getById: async () => {
+    getById: async (requestDTO) => {
 
       var options = {
         host: process.env.BATCH_JOB_HOST,
         port: process.env.BATCH_JOB_PORT,
-        path: '/batch-job-executed/:id/',
+        path: `/batch-job-executed/${requestDTO.id}/`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       };
       return await serviceREST.request(options).then(result => result);
-    }
+    },
+
+    getAdsByJobExecutedId: async (requestDTO) => {
+
+      try {
+
+        var options = {
+          host: process.env.BATCH_JOB_HOST,
+          port: process.env.BATCH_JOB_PORT,
+          path: `/batch-job-executed/ads/${requestDTO.id}/page/${requestDTO.page}/limit/${requestDTO.limit}/`,
+          method: 'GET',
+          headers: { 
+            'Content-Type': 'application/json', 
+          },
+        };
+        return await serviceREST.request(options).then(result => result);
+
+      } catch (error) {
+        
+        console.error(error)
+      }
+    },
+
+    countAdsByJobExecutedId: async (requestDTO) => {
+
+      try {
+
+        var options = {
+          host: process.env.BATCH_JOB_HOST,
+          port: process.env.BATCH_JOB_PORT,
+          path: `/batch-job-executed/ads/count/${requestDTO.id}/`,
+          method: 'GET',
+          headers: { 
+            'Content-Type': 'application/json', 
+          },
+        };
+        return await serviceREST.request(options).then(result => result);
+
+      } catch (error) {
+        
+        console.error(error)
+      }
+    },
   },
 
   

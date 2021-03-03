@@ -8,7 +8,7 @@ export type PageSocialSelectQueryVariables = {
     pageInternalID: string;
 };
 export type PageSocialSelectQueryResponse = {
-    readonly getAdsBySocialPageId: {
+    readonly getPageSocial: {
         readonly token: string;
         readonly pageSocial: {
             readonly id: string;
@@ -19,7 +19,8 @@ export type PageSocialSelectQueryResponse = {
                 readonly valuePublisherPlatform: string;
             };
         };
-        readonly ads: ReadonlyArray<{
+        readonly numAds: number | null;
+        readonly adsList: ReadonlyArray<{
             readonly _id: string | null;
             readonly id: string | null;
             readonly adCreationTime: string | null;
@@ -30,12 +31,13 @@ export type PageSocialSelectQueryResponse = {
             readonly adDeliveryStartTime: string | null;
             readonly adSnapshotUrl: string | null;
             readonly currency: string | null;
-            readonly fundingEntity: string | null;
-            readonly pageId: string | null;
-            readonly pageName: string | null;
             readonly publisherPlatforms: ReadonlyArray<string | null> | null;
+            readonly spend: {
+                readonly lowerBound: string | null;
+                readonly upperBound: string | null;
+            } | null;
             readonly created: string | null;
-        } | null>;
+        } | null> | null;
     } | null;
 };
 export type PageSocialSelectQuery = {
@@ -51,7 +53,7 @@ query PageSocialSelectQuery(
   $pageID: ID!
   $pageInternalID: ID!
 ) {
-  getAdsBySocialPageId(authToken: $authToken, id: $pageID, internalID: $pageInternalID) {
+  getPageSocial(authToken: $authToken, id: $pageID, internalID: $pageInternalID) {
     token
     pageSocial {
       id
@@ -62,7 +64,8 @@ query PageSocialSelectQuery(
         valuePublisherPlatform
       }
     }
-    ads {
+    numAds
+    adsList {
       _id
       id
       adCreationTime
@@ -73,10 +76,11 @@ query PageSocialSelectQuery(
       adDeliveryStartTime
       adSnapshotUrl
       currency
-      fundingEntity
-      pageId
-      pageName
       publisherPlatforms
+      spend {
+        lowerBound
+        upperBound
+      }
       created
     }
   }
@@ -129,9 +133,9 @@ const node: ConcreteRequest = (function () {
                     "variableName": "pageInternalID"
                 }
             ],
-            "concreteType": "PageSocialAdsResponse",
+            "concreteType": "PageSocialResponse",
             "kind": "LinkedField",
-            "name": "getAdsBySocialPageId",
+            "name": "getPageSocial",
             "plural": false,
             "selections": [
                 {
@@ -195,9 +199,16 @@ const node: ConcreteRequest = (function () {
                 {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "numAds",
+                    "storageKey": null
+                },
+                {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "Ads",
                     "kind": "LinkedField",
-                    "name": "ads",
+                    "name": "adsList",
                     "plural": true,
                     "selections": [
                         {
@@ -268,28 +279,32 @@ const node: ConcreteRequest = (function () {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "fundingEntity",
-                            "storageKey": null
-                        },
-                        {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "pageId",
-                            "storageKey": null
-                        },
-                        {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "pageName",
-                            "storageKey": null
-                        },
-                        {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
                             "name": "publisherPlatforms",
+                            "storageKey": null
+                        },
+                        {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "AdsSpend",
+                            "kind": "LinkedField",
+                            "name": "spend",
+                            "plural": false,
+                            "selections": [
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "lowerBound",
+                                    "storageKey": null
+                                },
+                                {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "upperBound",
+                                    "storageKey": null
+                                }
+                            ],
                             "storageKey": null
                         },
                         {
@@ -327,9 +342,9 @@ const node: ConcreteRequest = (function () {
             "metadata": {},
             "name": "PageSocialSelectQuery",
             "operationKind": "query",
-            "text": "query PageSocialSelectQuery(\n  $authToken: String!\n  $pageID: ID!\n  $pageInternalID: ID!\n) {\n  getAdsBySocialPageId(authToken: $authToken, id: $pageID, internalID: $pageInternalID) {\n    token\n    pageSocial {\n      id\n      internalId\n      name\n      publisherPlatform {\n        idPublisherPlatform\n        valuePublisherPlatform\n      }\n    }\n    ads {\n      _id\n      id\n      adCreationTime\n      adCreativeBody\n      adCreativeLinkCaption\n      adCreativeLinkDescription\n      adCreativeLinkTitle\n      adDeliveryStartTime\n      adSnapshotUrl\n      currency\n      fundingEntity\n      pageId\n      pageName\n      publisherPlatforms\n      created\n    }\n  }\n}\n"
+            "text": "query PageSocialSelectQuery(\n  $authToken: String!\n  $pageID: ID!\n  $pageInternalID: ID!\n) {\n  getPageSocial(authToken: $authToken, id: $pageID, internalID: $pageInternalID) {\n    token\n    pageSocial {\n      id\n      internalId\n      name\n      publisherPlatform {\n        idPublisherPlatform\n        valuePublisherPlatform\n      }\n    }\n    numAds\n    adsList {\n      _id\n      id\n      adCreationTime\n      adCreativeBody\n      adCreativeLinkCaption\n      adCreativeLinkDescription\n      adCreativeLinkTitle\n      adDeliveryStartTime\n      adSnapshotUrl\n      currency\n      publisherPlatforms\n      spend {\n        lowerBound\n        upperBound\n      }\n      created\n    }\n  }\n}\n"
         }
     } as any;
 })();
-(node as any).hash = 'c00c5083c9bc81b83de62e659d8f9839';
+(node as any).hash = '6a1d96e595a8035dc82a7d903619a49d';
 export default node;
